@@ -1,0 +1,136 @@
+title = 'scalalang'
+theme = 'PaperMod'
+baseURL = 'https://scalalang2.github.io/'
+languageCode = 'en-us'
+defaultContentLanguage = 'en'
+defaultContentLanguageInSubdir = true
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+pygmentsUseClasses = false
+
+[minify]
+disableXML = true
+minifyOutput = true
+
+[params]
+env = "production"
+title = "scalalang | blog"
+description = "I'm a software engineer working on the gaming industry. I loves to learn new things in the field of computer science and engineering."
+keywords = [ "Computer Science", "Tech", "Software Engineering", "Blog", "scalalang" ]
+author = "scalalang"
+images = [ "<link or path of image for opengraph, twitter-cards>" ]
+DateFormat = "January 2, 2006"
+defaultTheme = "auto"
+disableThemeToggle = false
+ShowReadingTime = true
+ShowPostNavLinks = true
+ShowCodeCopyButtons = true
+ShowWordCount = false
+ShowRssButtonInSectionTermList = true
+UseHugoToc = true
+disableSpecial1stPost = false
+disableScrollToTop = false
+comments = true
+hidemeta = false
+hideSummary = false
+showtoc = false
+tocopen = false
+
+  [params.label]
+  text = "scalalang"
+
+    [[params.profileMode.buttons]]
+    name = "Posts"
+    url = "posts"
+
+    [[params.profileMode.buttons]]
+    name = "Tags"
+    url = "tags"
+
+  [[params.socialIcons]]
+  name = "twitter"
+  url = "https://twitter.com/scalalang2"
+
+  [[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/scalalang2"
+
+  [[params.socialIcons]]
+  name = "medium"
+  url = "https://scalalang2.medium.com/"
+
+  [[params.socialIcons]]
+  name = "BOJ"
+  url = "https://boj.kr/scalalang"
+
+  [[params.socialIcons]]
+  name = "AtCoder"
+  url = "https://atcoder.jp/users/scalalang"
+
+  [params.cover]
+  hidden = true
+  hiddenInList = true
+  hiddenInSingle = true
+
+  [params.fuseOpts]
+  isCaseSensitive = false
+  shouldSort = true
+  location = 0
+  distance = 1_000
+  threshold = 0.4
+  minMatchCharLength = 0
+  keys = [ "title", "permalink", "summary", "content" ]
+
+  [params.assets]
+  disableHLJS = true
+
+[[menu.main]]
+identifier = "about"
+name = "About"
+url = "/about/"
+weight = 10
+
+[[menu.main]]
+identifier = "archives"
+name = "Archive"
+url = "/archives/"
+weight = 15
+
+[markup.highlight]
+  noClasses = true
+  codeFences = true
+  style = "modus-vivendi"
+  guessSyntax = true
+
+[languages]
+  [languages.ko]
+    contentDir = 'content/ko'
+    disabled = false
+    languageCode = 'ko-KR'
+    languageDirection = 'ltr'
+    languageName = 'Korean'
+    weight = 1
+    [languages.ko.params.homeInfoParams]
+      Title = "안녕하세요 👋"
+      Content = '''
+어디서나 볼 수 있는 평범한 소프트웨어 엔지니어입니다. 
+
+자세한 소개는 [About](/ko/about/) 에서 만나보세요 :)
+      '''
+  [languages.en]
+    contentDir = 'content/en'
+    disabled = false
+    languageCode = 'en-US'
+    languageDirection = 'ltr'
+    languageName = 'English'
+    weight = 2
+    
+    [languages.en.params.homeInfoParams]
+      Title = "Hello 👋"
+      Content = '''
+I'm a software engineer working on the gaming industry.
+
+I loves to learn new things in the field of computer science and engineering.
+  '''
