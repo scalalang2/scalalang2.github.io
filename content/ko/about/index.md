@@ -8,3 +8,6 @@
   - 언어로는 Go, Kotlin, Rust, Python, C++ 등이 있습니다
   - etc
 - 요즘에는 공부량을 조금 줄이고, 무언가 만들면서 코드 작성을 더 많이 해야겠다고 느끼고 있습니다.
+
+### Open Source Contributions
+- [grafana/tempo](https://github.com/grafana/tempo) : [#2105](https://github.com/grafana/tempo/pull/2105) [#2079](https://github.com/grafana/tempo/pull/2079)
