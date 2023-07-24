@@ -3,6 +3,7 @@ title: "HTTP/2와 gRPC"
 date: 2023-07-24T00:00:00+09:00
 tags: ["http/2", "grpc", "kubernetes"]
 ShowToc: true
+draft: true
 ---
 
 ## 개요
