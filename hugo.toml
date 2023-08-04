@@ -8,7 +8,7 @@ enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
-pygmentsUseClasses = false
+pygmentsUseClasses = true 
 
 [minify]
 disableXML = true
@@ -84,7 +84,7 @@ tocopen = false
   keys = [ "title", "permalink", "summary", "content" ]
 
   [params.assets]
-  disableHLJS = true
+  disableHLJS = false
 
 [[menu.main]]
 identifier = "about"
@@ -97,12 +97,6 @@ identifier = "archives"
 name = "Archive"
 url = "/archives/"
 weight = 15
-
-[markup.highlight]
-  noClasses = true
-  codeFences = true
-  style = "modus-vivendi"
-  guessSyntax = true
 
 [languages]
   [languages.ko]

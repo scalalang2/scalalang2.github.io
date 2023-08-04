@@ -1,3 +1,8 @@
+pre,
+code {
+    font-family: ui-monospace,"Cascadia Mono","Segoe UI Mono","Liberation Mono",Menlo,Monaco,Consolas,monospace;
+}
+
 .page-header,
 .post-header {
     margin: 24px auto var(--content-gap) auto;
@@ -204,7 +209,7 @@
     display: block;
     margin: auto 0;
     padding: 10px;
-    color: rgb(213, 213, 214);
+    color: var(--hljs-code) !important;
     background: var(--hljs-bg) !important;
     border-radius: var(--radius);
     overflow-x: auto;

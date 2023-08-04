@@ -29,3 +29,6 @@ hugo gen chromastyles --style modus-vivendi --highlightStyle 'bg:#474733' > asse
   # lineNos = true
   style = "monokai"
 ```
+
+### HLJS로 새로운 테마 입히기
+- [연관 이슈](https://github.com/adityatelange/hugo-PaperMod/discussions/119)
