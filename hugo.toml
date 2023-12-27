@@ -29,13 +29,13 @@ ShowPostNavLinks = true
 ShowCodeCopyButtons = true
 ShowWordCount = false
 ShowRssButtonInSectionTermList = true
-UseHugoToc = true
+UseHugoToc = false
 disableSpecial1stPost = false
 disableScrollToTop = false
 comments = true
-hidemeta = false
+hidemeta = true
 hideSummary = false
-showtoc = false
+showtoc = true
 tocopen = false
 
   [params.label]
