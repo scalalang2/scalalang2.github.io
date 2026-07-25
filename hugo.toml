@@ -1,0 +1,50 @@
+baseURL = "https://scalalang2.github.io/"
+theme = "hugo-bearneo"
+title = "scalalang2"
+locale = "ko-KR"
+enableRobotsTXT = true
+disableKinds = ["taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
+
+[permalinks]
+  blog = "/p/:slug/"
+  tags = "/blog/:slug/"
+
+[params]
+  title = "scalalang2"
+  description = "scalalang2's blog"
+  dateFormat = "2006-01-02"
+  copyright = "Copyright © scalalang2."
+  groupByYear = true
+  showPostCount = true
+  postSearch = true
+  toc = true
+  imageZoom = true
+  upvote = false
+
+  [params.footer]
+    hideCopyright = true
+    hideSitemap = true
+    hideMadeWithLine = true
+    hideRSSAndEmail = true
+
+  [params.RSS]
+    enableRSS = true
+    pageLimit = 20
+
+  [params.author]
+    name = "scalalang2"
+    email = ""
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+  [markup.highlight]
+    noClasses = false
+    lineNos = false

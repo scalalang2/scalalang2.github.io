@@ -1,0 +1,266 @@
+<style>
+  :root {
+    --width-max: 864px;
+  }
+
+  ul.blog-posts li {
+    align-items: baseline;
+    column-gap: 5px;
+  }
+
+  ul.blog-posts li span.grouped {
+    flex-basis: 92px;
+  }
+
+  ul.blog-posts li span.ungrouped {
+    flex-basis: 142px;
+  }
+
+  content h2 {
+    margin-top: 2.6rem;
+  }
+
+  content h2:first-child {
+    margin-top: 1rem;
+  }
+
+  .video-embed {
+    aspect-ratio: 16 / 9;
+    margin: 1.5rem 0;
+    width: 100%;
+  }
+
+  .video-embed iframe {
+    border: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  pre,
+  code {
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  code {
+    background-color: rgba(175, 184, 193, 0.2);
+    border-radius: 6px;
+    color: #24292f;
+    padding: 0.2em 0.4em;
+  }
+
+  pre code {
+    background-color: transparent;
+    border-radius: 0;
+    color: inherit;
+    padding: 0;
+    white-space: pre;
+  }
+
+  div.highlight,
+  div.highlight pre,
+  .chroma {
+    background: #f6f8fa;
+    color: #24292f;
+  }
+
+  div.highlight {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    margin: 1.2rem 0;
+    overflow: hidden;
+  }
+
+  div.highlight pre {
+    margin: 0;
+    overflow-x: auto;
+    padding: 16px;
+  }
+
+  .chroma .c,
+  .chroma .c1,
+  .chroma .cm,
+  .chroma .cp,
+  .chroma .cs {
+    color: #6e7781;
+  }
+
+  .chroma .k,
+  .chroma .kc,
+  .chroma .kd,
+  .chroma .kn,
+  .chroma .kp,
+  .chroma .kr,
+  .chroma .kt,
+  .chroma .ow {
+    color: #cf222e;
+  }
+
+  .chroma .s,
+  .chroma .s1,
+  .chroma .s2,
+  .chroma .sa,
+  .chroma .sb,
+  .chroma .sc,
+  .chroma .sd,
+  .chroma .se,
+  .chroma .sh,
+  .chroma .si,
+  .chroma .sx {
+    color: #0a3069;
+  }
+
+  .chroma .m,
+  .chroma .mb,
+  .chroma .mf,
+  .chroma .mh,
+  .chroma .mi,
+  .chroma .mo,
+  .chroma .il {
+    color: #0550ae;
+  }
+
+  .chroma .na,
+  .chroma .nc,
+  .chroma .nd,
+  .chroma .ne,
+  .chroma .nf,
+  .chroma .nx,
+  .chroma .nt {
+    color: #8250df;
+  }
+
+  .chroma .nb,
+  .chroma .bp,
+  .chroma .fm,
+  .chroma .nv,
+  .chroma .vc,
+  .chroma .vg,
+  .chroma .vi {
+    color: #953800;
+  }
+
+  .chroma .o,
+  .chroma .p {
+    color: #24292f;
+  }
+
+  .chroma .gd {
+    background-color: #ffebe9;
+    color: #82071e;
+  }
+
+  .chroma .gi {
+    background-color: #dafbe1;
+    color: #116329;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    code {
+      background-color: rgba(110, 118, 129, 0.4);
+      color: #e6edf3;
+    }
+
+    div.highlight,
+    div.highlight pre,
+    .chroma {
+      background: #0d1117;
+      color: #e6edf3;
+    }
+
+    div.highlight {
+      border-color: #30363d;
+    }
+
+    .chroma .c,
+    .chroma .c1,
+    .chroma .cm,
+    .chroma .cp,
+    .chroma .cs {
+      color: #8b949e;
+    }
+
+    .chroma .k,
+    .chroma .kc,
+    .chroma .kd,
+    .chroma .kn,
+    .chroma .kp,
+    .chroma .kr,
+    .chroma .kt,
+    .chroma .ow {
+      color: #ff7b72;
+    }
+
+    .chroma .s,
+    .chroma .s1,
+    .chroma .s2,
+    .chroma .sa,
+    .chroma .sb,
+    .chroma .sc,
+    .chroma .sd,
+    .chroma .se,
+    .chroma .sh,
+    .chroma .si,
+    .chroma .sx {
+      color: #a5d6ff;
+    }
+
+    .chroma .m,
+    .chroma .mb,
+    .chroma .mf,
+    .chroma .mh,
+    .chroma .mi,
+    .chroma .mo,
+    .chroma .il {
+      color: #79c0ff;
+    }
+
+    .chroma .na,
+    .chroma .nc,
+    .chroma .nd,
+    .chroma .ne,
+    .chroma .nf,
+    .chroma .nx,
+    .chroma .nt {
+      color: #d2a8ff;
+    }
+
+    .chroma .nb,
+    .chroma .bp,
+    .chroma .fm,
+    .chroma .nv,
+    .chroma .vc,
+    .chroma .vg,
+    .chroma .vi {
+      color: #ffa657;
+    }
+
+    .chroma .o,
+    .chroma .p {
+      color: #e6edf3;
+    }
+
+    .chroma .gd {
+      background-color: #490202;
+      color: #ffdcd7;
+    }
+
+    .chroma .gi {
+      background-color: #033a16;
+      color: #aff5b4;
+    }
+  }
+</style>
+
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [["$", "$"], ["\\(", "\\)"]],
+      displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
