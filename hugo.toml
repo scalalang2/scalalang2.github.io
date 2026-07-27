@@ -1,10 +1,17 @@
 baseURL = "https://scalalang2.github.io/"
 theme = "hugo-bearneo"
 title = "scalalang2"
+defaultContentLanguage = "ko"
 locale = "ko-KR"
 enableRobotsTXT = true
+enableGitInfo = true
 disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
+
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
 
 [permalinks]
   blog = "/p/:slug/"
@@ -12,7 +19,7 @@ ignoreErrors = ["error-disable-taxonomy"]
 
 [params]
   title = "scalalang2"
-  description = "scalalang2's blog"
+  description = "분산 시스템, 데이터베이스, 클라우드 인프라, AI/ML, 게임 서버를 다루는 scalalang2의 기술 블로그."
   dateFormat = "2006-01-02"
   copyright = "Copyright © scalalang2."
   groupByYear = true
