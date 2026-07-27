@@ -15,11 +15,11 @@ tags: []
 
 > 본업이 아닌 취미로 논문을 읽는 사람의 시선에서 정리한 내용입니다. 혹시 알고 계신 것과 다른 내용이 있거나 궁금한 점이 있으시면 피드백 부탁드립니다.
 
-> [Pangyoalto](https://medium.com/u/89ed5885f0af)님이 작년에 vLLM에 대해서 소개해주셨는데요.\
+> [Pangyoalto](https://medium.com/u/89ed5885f0af)님이 작년에 vLLM에 대해서 소개해주셨는데요.
 > 본 글과 함께 보시면 좋습니다.
 
-[<strong>Efficient Memory Management for Large Language Model Serving with PagedAttention</strong>\
-*해당 글은 필자의 블로그에 이미 발간된 글입니다.\
+[<strong>Efficient Memory Management for Large Language Model Serving with PagedAttention</strong>
+*해당 글은 필자의 블로그에 이미 발간된 글입니다.
 본 글은 Efficient Memory Management for Large Language Model Serving with PagedAttention(2023)…*medium.com](https://medium.com/rate-labs/efficient-memory-management-for-large-language-model-serving-with-pagedattention-01aacffe3b78 "https://medium.com/rate-labs/efficient-memory-management-for-large-language-model-serving-with-pagedattention-01aacffe3b78")[](https://medium.com/rate-labs/efficient-memory-management-for-large-language-model-serving-with-pagedattention-01aacffe3b78)
 
 ### Table Of Contents
@@ -67,7 +67,7 @@ LLM은 학습한 시점 이후부터는 새로 추가된 지식이 없기 때문
 ![](/img/medium/0-26YnsfeB_3dxB1Ur-8612c42e796f.png "[Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)")
 
 
-[<strong>RAG의 짧은 역사 훑어보기(첫 논문부터 최근 동향까지)</strong>\
+[<strong>RAG의 짧은 역사 훑어보기(첫 논문부터 최근 동향까지)</strong>
 *해당 글은 필자의 블로그에 이미 발간된 글입니다.*medium.com](https://medium.com/rate-labs/rag%EC%9D%98-%EC%A7%A7%EC%9D%80-%EC%97%AD%EC%82%AC-%ED%9B%91%EC%96%B4%EB%B3%B4%EA%B8%B0-%EC%B2%AB-%EB%85%BC%EB%AC%B8%EB%B6%80%ED%84%B0-%EC%B5%9C%EA%B7%BC-%EB%8F%99%ED%96%A5%EA%B9%8C%EC%A7%80-53c07b9b3bee "https://medium.com/rate-labs/rag%EC%9D%98-%EC%A7%A7%EC%9D%80-%EC%97%AD%EC%82%AC-%ED%9B%91%EC%96%B4%EB%B3%B4%EA%B8%B0-%EC%B2%AB-%EB%85%BC%EB%AC%B8%EB%B6%80%ED%84%B0-%EC%B5%9C%EA%B7%BC-%EB%8F%99%ED%96%A5%EA%B9%8C%EC%A7%80-53c07b9b3bee")[](https://medium.com/rate-labs/rag%EC%9D%98-%EC%A7%A7%EC%9D%80-%EC%97%AD%EC%82%AC-%ED%9B%91%EC%96%B4%EB%B3%B4%EA%B8%B0-%EC%B2%AB-%EB%85%BC%EB%AC%B8%EB%B6%80%ED%84%B0-%EC%B5%9C%EA%B7%BC-%EB%8F%99%ED%96%A5%EA%B9%8C%EC%A7%80-53c07b9b3bee)
 
 > <strong>번외</strong>
@@ -88,7 +88,7 @@ Prefix Caching이란 LLM 에이전트의 시스템 프롬프트처럼 무조건 
 ![](/img/medium/1-qfsgQzt0JlWW4wyU78yCNg-957d7775e73d.png "그림 출처 : CacheBlend 논문")
 
 
-> <strong>번외</strong>\
+> <strong>번외</strong>
 > RAGCache는 논문을 대충 훑어보기만 했는데요. 방법론 자체가 Prefix에 자주 등장하는 텍스트의 K/V 캐시를 더 메모리에 오래 상주시키자는 아이디어에서 출발합니다. CacheBlend와는 접근법이 많이 다르기 때문에 이정도로만 짧게 소개하겠습니다.
 
 ### ② Full KV reuse
@@ -120,8 +120,8 @@ CacheBlend의 목표는 RAG 환경에서 성능과 레이턴시를 모두 챙길
 
 표에는 많은 기호가 적혀있지만 이 글을 보시는 분은 마지막 두 개의 표현에만 주목하시면 됩니다.
 
-- <strong>KV deviation(= $\Delta_{kv}$)</strong> 는 전체를 다시 계산했을 경우와 K/V 캐시간의 절댓값 오차를 나타냅니다.
-- <strong>Attention deviation(= $\Delta_{attn}$)</strong> 는 KV deviation과 마찬가지로 캐시 사용 없이 전체를 계산했을 때의 어텐션 값과 캐시를 이용한 경우의 어텐션 값 차이를 나타냅니다.
+- <strong>KV deviation(= $Delta_{kv}$)</strong> 는 전체를 다시 계산했을 경우와 K/V 캐시간의 절댓값 오차를 나타냅니다.
+- <strong>Attention deviation(= $Delta_{attn}$)</strong> 는 KV deviation과 마찬가지로 캐시 사용 없이 전체를 계산했을 때의 어텐션 값과 캐시를 이용한 경우의 어텐션 값 차이를 나타냅니다.
 
 CacheBlend의 목적은 캐시 중 일부를 업데이트 하면서(KV_new), 실제로 계산했을 경우의 어텐션 값 차이를 최소화 하는 것입니다. 이를 통해 RAG 환경에서 여러 청크들의 KV 캐시를 재활용할 수 있습니다.
 
@@ -131,25 +131,25 @@ CacheBlend의 목적은 캐시 중 일부를 업데이트 하면서(KV_new), 실
 
 ![](/img/medium/1-UUj6sWILE0_QdRX2wxvOKQ-c40403c4d3c0.png)
 
-그럼 이제 중요한 질문이 떠오릅니다. <strong>어떤 토큰을 재계산할 지 어떻게 결정할까요?,</strong> 가장 좋은 건 $\Delta_{kv}$값을 가장 크게 만드는 <strong>범인</strong>을 찾아서 해당 벡터만 다시 계산하는 겁니다. 이 말을 달리하면, 다시 계산했을 때 $\Delta_{kv}$이 작아지는 토큰을 찾아서 업데이트해야 합니다. 제가 여기서는 범인이라고 표현했지만 논문에서는 이를 <strong>HKVD(High-KV-Deviation)</strong> 토큰 이라고 부릅니다.
+그럼 이제 중요한 질문이 떠오릅니다. <strong>어떤 토큰을 재계산할 지 어떻게 결정할까요?,</strong> 가장 좋은 건 $Delta_{kv}$값을 가장 크게 만드는 <strong>범인</strong>을 찾아서 해당 벡터만 다시 계산하는 겁니다. 이 말을 달리하면, 다시 계산했을 때 $Delta_{kv}$이 작아지는 토큰을 찾아서 업데이트해야 합니다. 제가 여기서는 범인이라고 표현했지만 논문에서는 이를 <strong>HKVD(High-KV-Deviation)</strong> 토큰 이라고 부릅니다.
 
 HKVD를 구하려면 이를 비교할 수 있는 <strong>KV_full(전체 계산)</strong>값이 필요하기 때문에 우리는 휴리스틱한 접근법이 필요한데요. 논문 저자들은 트랜스포머에서 다음 두 가지 현상을 발견합니다.
 
-### ① 한 레이어에서 HKVD 토큰을 다시 계산하면 $\Delta_{attn}$이 큰폭으로 감소한다.
-아래 그림은 논문 저자들이 3개의 모델에 대해서 K/V 벡터를 재계산 할 비율 R%를 늘려가면서 $\Delta_{attn}$의 변화량을 관찰한 결과입니다.
+### ① 한 레이어에서 HKVD 토큰을 다시 계산하면 $Delta_{attn}$이 큰폭으로 감소한다.
+아래 그림은 논문 저자들이 3개의 모델에 대해서 K/V 벡터를 재계산 할 비율 R%를 늘려가면서 $Delta_{attn}$의 변화량을 관찰한 결과입니다.
 
 ![](/img/medium/1-xJM2nBUMl3MI5EuLbsnQzw-bfa70a59b925.png)
 
-어림잡아 10-20% 정도만 재계산해도 $\Delta_{attn}$ 값이 큰 폭으로 감소하는 것을 볼 수 있습니다. 저자들은 이 현상의 근거를 [<strong>어텐션 희소성(attention sparsity)[10]</strong>](https://openai.com/index/sparse-transformer/)에서 찾았습니다 (높은 어텐션값은 일부 소수의 토큰에 집중된 경향이 있습니다)
+어림잡아 10-20% 정도만 재계산해도 $Delta_{attn}$ 값이 큰 폭으로 감소하는 것을 볼 수 있습니다. 저자들은 이 현상의 근거를 [<strong>어텐션 희소성(attention sparsity)[10]</strong>](https://openai.com/index/sparse-transformer/)에서 찾았습니다 (높은 어텐션값은 일부 소수의 토큰에 집중된 경향이 있습니다)
 
 ### ② 레이어 간 HKVD토큰은 높은 상관관계를 가진다.
-어떤 한 레이어에서 발견된 HKVD 토큰은 다음 레이어에서도 HKVD토큰인 경향이 매우 크다고 합니다. 논문 저자들은 이에 대한 근거로 인접한 레이어에서 각 토큰들의 $\Delta_{kv}$ 값의 [스피어만 상관계수](https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)를 제시합니다.
+어떤 한 레이어에서 발견된 HKVD 토큰은 다음 레이어에서도 HKVD토큰인 경향이 매우 크다고 합니다. 논문 저자들은 이에 대한 근거로 인접한 레이어에서 각 토큰들의 $Delta_{kv}$ 값의 [스피어만 상관계수](https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)를 제시합니다.
 
 쉽게 비유하자면, 중학교 시험에서 순위권 성적을 받은 학생이 고등학교에서도 순위권 성적을 받을 확률이 높은 것으로 이해하면 됩니다.
 
 ![](/img/medium/1-shLTApQB2uPxPZ16GCu1iw-58f2188ddda2.png)
 
-뒤 두 사실을 근거로 논문 저자들은 첫 번째 레이어에서는 캐시를 사용하지 않고 정석대로 계산한 다음에 r%의 높은 성적($\Delta_{kv}$)을 받은 토큰들을 선택해서 모든 레이어에서 이 친구들만 재계산합니다.
+뒤 두 사실을 근거로 논문 저자들은 첫 번째 레이어에서는 캐시를 사용하지 않고 정석대로 계산한 다음에 r%의 높은 성적($Delta_{kv}$)을 받은 토큰들을 선택해서 모든 레이어에서 이 친구들만 재계산합니다.
 
 하지만 수능이라는 단 한 번의 시험이 학업수행능력의 평가의 척도로 쓰인다면 조금 아쉬울 수 있겠죠. GPT 3.5의 LLM 레이어는 96개인 것으로 알려져 있습니다. 논문 저자들은 첫 번째 레이어에서만 상위권 학생을 고정시켜 버리면 통계적으로 조금 불안정한 값이 될 수 있다고 합니다.
 
@@ -193,7 +193,7 @@ CacheBlend의 평가 결과를 요약하면 3가지로 말할 수 있습니다.
 - [2] [LMCache](https://lmcache.ai/)
 - [3] [Attention Is All You Need](https://research.google/pubs/attention-is-all-you-need/)
 - [4] [KV Caching Explained: Optimizing Transformer Inference Efficiency](https://huggingface.co/blog/not-lain/kv-caching)
-- [5] [Pierre Lienhart](https://medium.com/u/4e8bdd342794) \| [LLM Inference Series: 4. KV caching, a deeper look](https://medium.com/@plienhar/llm-inference-series-4-kv-caching-a-deeper-look-4ba9a77746c8)
+- [5] [Pierre Lienhart](https://medium.com/u/4e8bdd342794) | [LLM Inference Series: 4. KV caching, a deeper look](https://medium.com/@plienhar/llm-inference-series-4-kv-caching-a-deeper-look-4ba9a77746c8)
 - [6] [Panda: Performance debugging for databases using LLM agents](https://www.amazon.science/publications/panda-performance-debugging-for-databases-using-llm-agents)
 - [7] [RAGCache: Efficient Knowledge Caching for Retrieval-Augmented Generation](https://arxiv.org/abs/2404.12457)
 - [8] [Prompt Cache: Modular Attention Reuse for Low-Latency Inference](https://arxiv.org/pdf/2311.04934)

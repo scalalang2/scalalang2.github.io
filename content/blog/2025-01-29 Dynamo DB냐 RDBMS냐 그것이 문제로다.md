@@ -102,7 +102,7 @@ Vitess, CockroachDB 그리고 Limitless Database가 수평 확장을 지원하�
 
 ![](/img/medium/1-D5e4sc8tgvjPD0_4O32sQQ-d5c18f166f6f.png)
 
-> 관계형 DB에서 쓰기를 수평확장 하는 건 사실상 불가능하다. \
+> 관계형 DB에서 쓰기를 수평확장 하는 건 사실상 불가능하다. 
 > <strong>만약 수평 확장을 한다면 그건 더 이상 관계형이 아니다.</strong>
 
 위의 주장이 어떤 뜻으로 쓰인 건지는 정확히 알 수 없지만, 제가 알고 있는 지식에 기대어 생각해보면 다음과 같이 상상해볼 수 있습니다. 샤딩으로 수평 확장된 데이터베이스에서 데이터가 여러 샤드로 나뉘어져 있으면 트랜잭션은 여러 샤드에 걸쳐 <strong>2단계 커밋 프로토콜(2PC)</strong>을 수행해야 ACID 속성을 만족시킬 수 있습니다.
@@ -146,22 +146,24 @@ DynamoDB는 데이터 저장 시 Paxos 알고리즘을 사용하여 서로 다�
 
 Aurora Limitless Database 에서는 테이블을 생성하기 전에 테이블 모드와 샤드키를 설정해야 합니다. 테이블에는 <strong>샤드 테이블(sharded)</strong>과 <strong>참조 테이블(reference table)</strong> 두 개가 있는데, 참조 테이블은 모든 노드에 복사본을 유지해서 조인 성능을 높이는데 사용합니다. 이런 개념은 거의 대부분 샤딩을 지원하는 데이터베이스에서 공유하고 있습니다.
 
-SET rds_aurora.limitless_create_table_mode='sharded';\
-SET rds_aurora.limitless_create_table_shard_key='{"item_id", "item_cat"}';\
+```sql
+SET rds_aurora.limitless_create_table_mode='sharded';
+SET rds_aurora.limitless_create_table_shard_key='{"item_id", "item_cat"}';
 CREATE TABLE items(item_id int, item_cat varchar, val int, item text);
+```
 
 키를 파티션으로 나누는 방법에는 크게 <strong>범위 기반</strong>과 <strong>해시 기반</strong>이 있습니다. DynamoDB와 Aurora Limitless는 모두 해시 기반으로 파티션을 다룹니다만 단순히 <strong>모듈러 연산</strong>을 취하기 보단 더 동적으로 이를 제어합니다. Aurora Limitless 에서는 엔지니어가 직접 SQL 명령어 단일 샤드 하나를 쪼갤 수 있는데요. 특정 샤드가 핫 파티션이 된 경우에 사용하면 적절히 부하를 분산시킬 수 있습니다[21].
 
 ```sql
 SELECT rds_aurora.limitless_split_shard('subcluster_id');
 SELECT * FROM rds_aurora.limitless_list_shard_scale_jobs(1691300000000);
-```
-\
-job_id \| action \| job_details \| status \| submission_time \| message\
----------------+-------------+-----------------------+---------+------------------------+-------------------------------------------\
-1691300000000 \| SPLIT_SHARD \| Split Shard 3 by User \| SUCCESS \| 2023-08-06 05:33:20+00 \| Scaling job succeeded. +\
-\| \| \| \| \| New shard instance with ID 7 was created.\
+
+job_id | action | job_details | status | submission_time | message
+---------------+-------------+-----------------------+---------+------------------------+-------------------------------------------
+1691300000000 | SPLIT_SHARD | Split Shard 3 by User | SUCCESS | 2023-08-06 05:33:20+00 | Scaling job succeeded. +
+| | | | | New shard instance with ID 7 was created.
 (1 row)
+```
 
 DynamoDB에서 파티셔닝은 테이블의 처리량(throughput)에 의해 결정됩니다. 클라우드 장비의 스펙이나 네트워크 대역폭을 고려해서 하나의 파티션이 최대 1000 WCUs 만큼만 처리 가능하다는 결론이 나왔다고 합시다. 만약 테이블이 3200 WCUs로 설정했으면 DynamoDB는 800WCUs씩 할당된 4개의 파티션을 생성합니다. 시간이 지나서, 고객이 6000 WCUs로 증가시키면 기존에 존재하는 파티션을 분할합니다. 다시 말하면, 1000 WCUs를 가진 6개의 파티션이 아닌, 750WCUs를 가진 8개의 파티션을 생성하게 됩니다.
 
@@ -200,11 +202,13 @@ DynamoDB는 완전 관리형 키-밸류 데이터베이스로 개발자가 신�
 
 만약에 성능 때문에 분산 트랜잭션을 피하고 싶어도 회피할 수 없는 상황이 하나 있는데요. 샤드키의 경우에는 UPDATE 쿼리가 동작하지 않기 때문에 레코드 삭제와 삽입을 트랜잭션으로 묶어서 처리해야 합니다.
 
-postgres_limitless=\> UPDATE items SET user_id = 11 WHERE user_id = 1;\
-ERROR: Shard key column update is not supported\
-\
-postgres_limitless=\> UPDATE items SET user_id = 11 WHERE username = 'scalalang2';\
+```sql
+postgres_limitless=> UPDATE items SET user_id = 11 WHERE user_id = 1;
 ERROR: Shard key column update is not supported
+
+postgres_limitless=> UPDATE items SET user_id = 11 WHERE username = 'scalalang2';
+ERROR: Shard key column update is not supported
+```
 
 ### ❷ 다대다 관계 데이터
 다대다(Many-To-Many) 관계의 데이터는 샤딩과 키-밸류 모두 어울리지 않을 수 있습니다. 예를 들면, 유튜브에서 <strong>영상 A의 댓글 목록 조회(A)</strong> 기능과 <strong>내가 작성한 댓글 목록 조회(B)</strong>하는 기능이 있습니다. 이 기능은 서로 배타적인 성격을 가집니다.
@@ -252,7 +256,7 @@ DynamoDB는 처음부터 안정성과 부하 관리를 고려하도록 설계되
 
 ### 레퍼런스
 
-- [1] Citus \| Postgres 분산 데이터베이스 A-Z 소개
+- [1] Citus | Postgres 분산 데이터베이스 A-Z 소개
 - [2] [The architecture of a distributed SQL database, part 1: Converting SQL to a KV store](https://www.cockroachlabs.com/blog/distributed-sql-key-value-store/)
 - [3] [When would you NOT choose DynamoDB where you’d typically use RDBMS?](https://www.reddit.com/r/aws/comments/11bpfen/when_would_you_not_choose_dynamodb_where_youd/)
 - [4] [How Discord Stores Billions of Messages](https://discord.com/blog/how-discord-stores-billions-of-messages)

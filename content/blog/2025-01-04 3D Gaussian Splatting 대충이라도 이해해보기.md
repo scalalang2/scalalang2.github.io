@@ -102,23 +102,23 @@ NeRF는 다양한 각도에서 촬영한 이미지를 학습해서 3D 공간 정
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-```
-from scipy.stats import multivariate_normal\
-\
-```python
+
+from scipy.stats import multivariate_normal
+
 mean = np.array([0, 0, 0])
 cov = np.array([[1, 0.5, 0.3],
-```
-[0.5, 2, 0.2],\
-[0.3, 0.2, 1]])\
-\
-num_points = 1000\
-points = np.random.multivariate_normal(mean, cov, num_points)\
-pdf_values = multivariate_normal.pdf(points, mean=mean, cov=cov)\
-\
-...\
-\
+
+[0.5, 2, 0.2],
+[0.3, 0.2, 1]])
+
+num_points = 1000
+points = np.random.multivariate_normal(mean, cov, num_points)
+pdf_values = multivariate_normal.pdf(points, mean=mean, cov=cov)
+
+...
+
 plt.show()
+```
 
 ![](/img/medium/1-bLpt2sDCqmiSBEQ0rN6ATQ-05dd46dc670a.png "공분산 행렬 Σ 로 시각화한 3차원 가우시안 데이터")
 
@@ -147,16 +147,17 @@ plt.show()
 ### ② 공분산 행렬을 타원체로 다루기
 공분산 행렬은 항상 <strong>정부호 행렬(고윳값이 항상 양수)</strong>이어야 합니다. 아래 코드를 보면 음수의 고윳값을 가지는 행렬은 애초에 함수를 통과하지 못하는 걸 볼 수 있습니다.
 
-import numpy as np\
-\
 ```python
+import numpy as np
+
 cov = np.array([[1, 2], [2, 1]])
 eigenvalues = np.linalg.eigvals(cov)
+
+print(egeinvalues) # [3, -1]
+
+np.random.multivariate_normal(mean=[0, 0], cov=cov, size=1000)
+# Error : covariance is not symmetric positive-semidefinite.
 ```
-print(egeinvalues) \# [3, -1]\
-\
-np.random.multivariate_normal(mean=[0, 0], cov=cov, size=1000)\
-\# Error : covariance is not symmetric positive-semidefinite.
 
 3D GS는공분산 행렬의 각 원소들을 <strong>Graident Descent</strong>로 학습하기 때문에 자칫 <strong>대칭성</strong>이나 <strong>정부호 행렬의 성질</strong>을 잃어버릴 수 있습니다. 3D GS는 이 문제를 해결하기 위해 직관적인 방법을 사용하는데 가우시안을 타원체의 도형으로 취급하는 겁니다. 이 타원체는 <strong>Rotation Matrix(R)</strong>와 <strong>Scaling Matrix(S)</strong>로 표현합니다.
 
@@ -178,7 +179,7 @@ R과 S두 행렬을 가지고 <strong>행렬 Σ</strong>는 아래 수식으로 
 ![](/img/medium/1-m9PFq5UkHsssB9IXc7ekNQ-d4e9b6d9e8b4.png "[source : 주성분 분석(PCA) — 공돌이의 수학 노트](https://angeloyeo.github.io/2019/07/27/PCA.html#google_vignette)")
 
 
-> <strong>쿼터니언</strong>\
+> <strong>쿼터니언</strong>
 > 물체의 회전이라는 건 각 Pitch, Roll, Yaw 각 축에 대해 회전한 정도로 표현할 수 있는데요. 이를 직접 사용하는 오일러 각은 연산도 비효율적이며 짐벌 락(Gimbal Lock)현상이 발생하기 때문에 게임 개발할 때는 흔히 회전을 <strong>쿼터니언</strong>으로 변환시켜서 사용하곤 합니다. 위 수식에서 R은 쿼터니언에서 사용하는 행렬로 i, j, k, r 4개의 변수를 가지고 있습니다.
 
 > 유명한 [*수학 채널 3Blue1Borwn*](https://www.youtube.com/watch?v=d4EgbgTm0Bg) 에서 쿼터니언에 대해 다룬 적이 있습니다.
@@ -186,7 +187,7 @@ R과 S두 행렬을 가지고 <strong>행렬 Σ</strong>는 아래 수식으로 
 ![](/img/medium/1-LWzqte3Cf50nnnOLD66IWw-89c9d5ba1941.png "[[source](https://www.researchgate.net/figure/a-Pitch-yaw-and-roll-angles-of-an-aircraft-with-body-orientation-O-u-v-original_fig7_348803228)]")
 
 
-③ Spherical Harmonics \| 색상 표현하기 \
+③ Spherical Harmonics \| 색상 표현하기
 사물은 바라보는 방향에 따라 보이는 색상이 다릅니다.<strong> 이를 (2)에서 정의한 타원체에 표현시키기 위해서 </strong>구면 조화 함수(Spherical Harmonics)를 사용하는데요. 이는 언리얼 엔진에서 광원 효과를 주는 볼류메트릭 라이트맵[8]의 원리이기도 합니다.
 
 ![](/img/medium/1-JCxufrbXs9iYMpuDJg1Fag-7a8e6850d600.png "흠.. 대학원 양자역학이요..?")
@@ -213,24 +214,26 @@ R과 S두 행렬을 가지고 <strong>행렬 Σ</strong>는 아래 수식으로 
 
 완전히 같진 않지만 의사 코드를 작성해보면 아래와 비슷합니다. 실제 논문 저자들이 [구현한 코드](https://github.com/graphdeco-inria/gaussian-splatting/blob/54c035f7834b564019656c3e3fcc3646292f727d/utils/sh_utils.py#L57-L112)를 보면 L=3 까지만 사용하고 있습니다. 위 변수에서 C1, C2, …, Cn을 <strong>SH Coefficient</strong> 라고 부릅니다.
 
-import numpy as np\
-\
 ```python
+import numpy as np
+
+
 def spherical_harmonics_color(coefficients, theta, phi):
 Y00 = 0.5 * np.sqrt(1 / np.pi)
 Y1m1 = np.sqrt(3 / (4 * np.pi)) * np.sin(theta) * np.sin(phi)
 Y10 = np.sqrt(3 / (4 * np.pi)) * np.cos(theta)
 Y11 = np.sqrt(3 / (4 * np.pi)) * np.sin(theta) * np.cos(phi)
-```
-\
-color = (\
-coefficients[0] * Y00 +\
-coefficients[1] * Y1m1 +\
-coefficients[2] * Y10 +\
-coefficients[3] * Y11\
-)\
-\
+
+
+color = (
+coefficients[0] * Y00 +
+coefficients[1] * Y1m1 +
+coefficients[2] * Y10 +
+coefficients[3] * Y11
+)
+
 return color
+```
 
 ### 그런데 이걸 왜 이렇게 하는 걸까요?
 
