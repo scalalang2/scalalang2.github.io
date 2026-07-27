@@ -82,8 +82,6 @@ PostgreSQL를 이용하는 사례가 점점 늘어나고, 데이터의 규모가
 - 특정 고객에 한해서만 특정 커스텀한 기능이 필요한 경우, JSONB 데이터에 필드를 추가하는 것으로 해결 할 수 있다.
 - 핫스팟이 발생할 경우 어디가 병목이 되는지 알 수 있어야 한다.
 
-### 그리고 Citus는 이런 기능들을 잘 제공하고 있다.
-
 ### 실시간 분석
 
 실시간 분석 시스템으로는 이상 감지, 시스템 모니터링, 행동 분석, 지리/공간 쿼리, 대시보드 등이 있다. 이런 실시간 환경에서는 <strong>`높은 쓰기 처리량(High write throughput)`</strong> 과 대규모의 <strong>`분석 쿼리`</strong>를 데이터베이스가 감당할 수 있어야 한다. 쿼리는 데이터 볼륨과 상관없이 1초 이내(sub seconds) 내로 응답을 줘야 한다. 다행히도, 대 부분의 경우에서는 어떤 쿼리를 수행하는지 미리 개발자가 알 수 있기 때문에, 인덱스와 [롤업(ROLLUP)](https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-rollup/) 을 이용해서 응답 시간을 줄일 수 있다.
@@ -155,7 +153,7 @@ PostgreSQL은 파서 빼고는 모든 것이 모듈식 구조로 구성되어 �
 > A. 코디네이터가 관리하는 메타 데이터를 전부 워커 노드로 복제하고 모든 워커노드를 코디네이터로 만드는 옵션이 있다고 한다. 이 경우엔 클라이언트 사이드에서 로드 밸런싱을 다수의 워커 노드에 걸어서 사용해야 한다.\
 > <strong>일단 논문에서는 이 옵션을 되도록이면 사용하지 말라고 말한다. 그 이유는 각 노드를 코디네이터로 만들고 서로, 서로 연결을 맺어야 하는 분산 트랜잭션을 계속 날리면 커넥션 수가 부족하고 오히려 병목이 된다고 한다.</strong>
 
-### 시투스의 데이터 타입 ❗️❕
+### 시투스의 데이터 타입
 
 사실, 시투스를 이용하는 애플리케이션 개발자 입장에서는 이 내용이 가장 중요하다. 시투스는 <strong>분산 테이블</strong>과 <strong>레퍼런스 테이블, </strong>이 2가지 데이터 타입을 지원한다.
 
@@ -167,10 +165,10 @@ PostgreSQL은 파서 빼고는 모든 것이 모듈식 구조로 구성되어 �
 ```sql
 CREATE TABLE other_table (...);
 SELECT create_distributed_table(
-```
-'other-table',\
-'distribution_column', colocate_with := 'my_table'\
+  'other-table',\
+  'distribution_column', colocate_with := 'my_table'\
 );
+```
 
 - 서로 다른 테이블의 데이터에서 <strong>유저 키</strong> 단위로 같은 노드에 저장 되도록 코로케이션을 설정한다면? 조인 쿼리를 날릴 때 부가적인 네트워크 통신 없이도 데이터를 조회 할 수 있게 된다.
 
@@ -306,12 +304,14 @@ CustomScan은 Adpative Executor라는 서브 플랜을 생성해서 분산 쿼�
 
 50GB의 데이터를 일단 생성해본다.
 
-BEGIN TRANSACTION;\
 ```sql
+BEGIN TRANSACTION;
+
 UPDATE a1 SET v = v + :d WHERE key = :key1;
 UPDATE a2 SET v = v + :d WHERE key = :key2;
-```
+
 COMMIT TRANSACTION;
+```
 
 위 쿼리에서 key1, key2를 랜덤으로 생성해보면서 트랜잭션을 날려보면서 성능을 측정했다고 한다. 아래 그림에서 Same Key는 키가 동일해서 하나의 워커 노드에서 처리가 가능한 트랜잭션이다. 키가 다른 경우에는 분산 트랜잭션으로 실행되는 경우가 된다. 실험 결과 분산 트랜잭션이 약 20~30% 정도 느리다고 한다.
 
