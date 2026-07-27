@@ -27,9 +27,8 @@ tags: []
 
 우선 암호학점 해시 함수 (Hash Function)을 이용하면, 우리는 실제로 해시 함수를 실행하기 전에는 값을 예측할 수 없다. 그리고 해시 함수의 인자값으로 과거에 발생했던 해시를 입력하면 hash1은 hash2이전에 존재했음이 증명된다. 아래 [그림 1]은 대략적인 PoH 시퀀스를 보여준다.
 
-![](/img/medium/1-rXrPbNHYYCt4bP1Yg3RsRw-ed558749da47.png)
+![](/img/medium/1-rXrPbNHYYCt4bP1Yg3RsRw-ed558749da47.png "[그림 1] 간소화된 버전의 PoH Sequence.")
 
-[그림 1] 간소화된 버전의 PoH Sequence.
 
 처음 이 이야기를 듣고 나서는 한가지 물음표가 머릿속을 맴돌았다. “아니 이거 그냥 블록체인 아니야?” 그리곤 “아니야 뭔가 더 있겠지 계속 읽어보자” 하면서 계속 백서를 읽어나갔다. 솔라나에서는 이런 이전 해시를 다음 해시로 넘기는 과정을 체인이라 부르지 않고 시퀀스(Sequence)라고 부른다.
 
@@ -53,29 +52,25 @@ sha256 해시 함수를 통해 이전 해시를 기입해서 다음 해시를 �
 
 아래 [그림 2]를 보면 sequence를 생성할 때 이전 해시값과 더불어 특정 데이터의 해시까지 같이 기입하는 것을 알 수 있다. photograph1.sha256과 hash335를 기입하였고 시퀀스가 계속 이어지다가 has559와 photograph2.sha256값을 같이 기입하여 hash600을 생성했다. 이런 속성은 photograph2의 사진이 photograph1 이후에 찍혔음을 증명한다.
 
-![](/img/medium/1-MxEROXnweMYXavdBew6twQ-044a7d783c6c.png)
+![](/img/medium/1-MxEROXnweMYXavdBew6twQ-044a7d783c6c.png "[그림 2] Proof-of-History Sequence With 2 Events")
 
-[그림 2] Proof-of-History Sequence With 2 Events
 
 블록체인과 동일하게 임의의 시퀀스 번호에서 데이터를 변조하는 것은 결과인 hash값을 변형시키기 때문에 연쇄적으로 다음 PoH 시퀀스를 전부 invalidate한 것으로 만든다. 따라서, 한 번 기록된 사건은 조작되지 못한다.
 
-![](/img/medium/1-n_9BsMhwxKd04PwYm3VVWw-44aaa5ed61c5.png)
+![](/img/medium/1-n_9BsMhwxKd04PwYm3VVWw-44aaa5ed61c5.png "[그림 3] PoH 시퀀스에 임의의 데이터를 입력한 그림")
 
-[그림 3] PoH 시퀀스에 임의의 데이터를 입력한 그림
 
 ### ② 역사 증명 검증
 
 역사 증명 시퀀스는 멀티 코어 컴퓨터에서 시퀀스를 생성하는 것보다는 훨씬 빠르게 검증 가능하다. 단순히 해시 연산을 수행해서 다음 해시가 올바른지만 검증하면 되기 때문에 시퀀스를 분할해서 멀티 코어로 병렬 처리가 가능하다. [그림 4]에서 이를 검증하는 과정을 보여준다.
 
-![](/img/medium/1-yhWveGh5badKTtrAHkvpLg-f8db8405d333.png)
+![](/img/medium/1-yhWveGh5badKTtrAHkvpLg-f8db8405d333.png "[그림 4] 역사 증명을 멀티 코어로 검증하기")
 
-[그림 4] 역사 증명을 멀티 코어로 검증하기
 
 단순, 해시 연산을 통해서 검증이 가능하기 때문에 해시레이트를 사용해서 이를 단순하게 증명할 수 있다. 우선, 시퀀스를 만드는 일은 싱글 코어에서만 가능하기 때문에 <strong>Total number of hashes</strong> 만큼의 연산이 든다. 이를 검증하는 것은 작업을 쪼개서 각 코어에서 처리하면 되므로 한 코어의 해시레이트와 사용 가능한 코어수를 곱해서 나누면 된다.
 
-![](/img/medium/1-Cflq43lkJbvfSHyDsdN5cQ-cd149b4bb557.png)
+![](/img/medium/1-Cflq43lkJbvfSHyDsdN5cQ-cd149b4bb557.png "[그림 5] 전체 시퀀스를 검증하는데 드는 예상 소요 시간")
 
-[그림 5] 전체 시퀀스를 검증하는데 드는 예상 소요 시간
 
 이를 종합하자면, 시퀀스를 만드는 것은 오로지 싱글 코어에서만 가능하고 이를 검증하는 것은 멀티 코어로 가능하다. 즉, PoH가 가지는 특징이 VDF의 속성과 일치하므로 솔라나의 설계자는 자신의 미디엄 글[5]에서 PoH를 High-Frequency VDF 라고 정의했다.
 

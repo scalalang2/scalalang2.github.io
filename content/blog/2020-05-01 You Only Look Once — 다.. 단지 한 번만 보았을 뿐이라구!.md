@@ -8,9 +8,8 @@ tags: []
 
 이번 포스팅에서는 객체 탐지(Object Detection)분야에서 많이 알려진 논문인 “You Only Look Once: Unified, Real-Time Object Detection (2016)”을 다룬다[1]. 줄여서 흔히 YOLO라고 부른다. 객체 탐지란 이미지가 주어지면 배경과 사물을 구분하고 어떤 사물인지 인지하는 것을 말한다. 아래 그림은 실제로 YOLO 모델을 통해 이미지에서 사물을 구분한 결과를 보여준다.
 
-![](/img/medium/1-Rjm0QjZf2bckAS9E_BXubg-a106d693b651.png)
+![](/img/medium/1-Rjm0QjZf2bckAS9E_BXubg-a106d693b651.png "[그림 1] YOLO v1을 이용하여 실제로 사물과 그림 안의 물체를 분류한 결과")
 
-[그림 1] YOLO v1을 이용하여 실제로 사물과 그림 안의 물체를 분류한 결과
 
 YOLO가 등장하기 이전에도 딥러닝 모델을 이용하여 객체 탐지를 수행하는 방법은 있었다. 대표적으로 DPM과 R-CNN이 존재하는데 YOLO는 기존 모델들 보다 더 높은 정확도를 추구하는 것이 아닌, 근접한 정확도를 가지면서 더 많은 양의 이미지를 처리할 수 있는 실시간 객체 탐지를 하고자 등장했다. YOLO는 2016년 처음 등장한 이후 업데이트 된 논문만 3편이 더 출시되어 YOLO라는 이름이 붙은 논문만 총 4편이 존재한다. 논문 제목은 각각 다르지만 보통 편의상 버전명을 붙여서 YOLOv\<버전명\>으로 부른다.
 
@@ -27,9 +26,8 @@ YOLO가 등장하기 이전에도 딥러닝 모델을 이용하여 객체 탐지
 
 조셉 레드몬은 워싱턴 대학교 산하의 PLSE 연구실(실제로는 그룹에 더 가까운 커뮤니티)에서 연구하고 있고 C기반의 DarkNet 프레임워크를 개발한 것으로 유명하다. 아마 YOLO가 속도를 추구하는 만큼 파이썬 기반의 프레임워크가 아닌 C로 작성하여 구현한 듯하다. 그는 2016년에는 YOLO v1을, 2017년에는 YOLO v2[2]를 발표하고 2018에는 개선한 버전인 YOLO v3[3]를 차례로 공개하였다. 이렇게 활발한 연구활동을 하던 그가 2020년 2월 21일, 더 이상 비전 컴퓨팅 연구를 하지 않겠다라고 선언했다[4].
 
-![](/img/medium/1-8w8oh1BlcHscmQI-Quio4Q-8556f56e4c30.png)
+![](/img/medium/1-8w8oh1BlcHscmQI-Quio4Q-8556f56e4c30.png "[그림 2] 조셉 레드몬의 2020년 2월 21일 트위터")
 
-[그림 2] 조셉 레드몬의 2020년 2월 21일 트위터
 
 조셉 레드몬이 지금까지 진행한 연구가 공익적 목적보다는 군사적, 개인정보 침해로 활용될 가능성이 커서 잠정적으로 연구를 중단한다고 한다. 인공지능의 발전이 인류에 위협이 될 수 있다는 우려는 꾸준히 제기 되었다. 누군가는 “인공지능의 위협을 막는 방법은 다른 연구자가 발견할 것이기 때문에 우리는 걱정하지 않아도 된다.” 라고 했지만 조셉 레드몬은 그렇게 생각하지 않았다.
 
@@ -48,9 +46,8 @@ YOLO가 등장하기 이전에도 딥러닝 모델을 이용하여 객체 탐지
 
 재차 설명하지만 YOLO는 빠르게 이미지를 탐지하는 것을 목표로 한다. 그 말은 학습 과정보다는 테스트 과정을 더 중요하게 본다는 뜻이다. 그렇기 때문에 다른 연구와 비교하여 볼 때도 학습 과정보다는 이미지가 주어졌을 때 이를 분류하는 테스트 과정을 보아야 한다. YOLO의 시스템 모델과 관련 연구의 차이를 이해하기 위해 R-CNN 모델의 테스트 과정을 대략적으로 살펴보자[4].
 
-![](/img/medium/1-3YYd-HAwZnB6-u1npprr_A-8abcad1be137.png)
+![](/img/medium/1-3YYd-HAwZnB6-u1npprr_A-8abcad1be137.png "[그림 3] R-CNN의 시스템 모델")
 
-[그림 3] R-CNN의 시스템 모델
 
 CNN 기반 모델이 이미지가 주어졌을 때 자동차인지, 비행기인지 분류하는데 높은 정확도를 보여주는 것은 많이 알려져 있다. R-CNN은 이 특징을 이용한다. 먼저 이미지가 주어졌을 때 선택적 탐색(Selective Search)알고리즘을 이용해 2000개의 리전을 생성하여 서브-이미지를 추출한다.
 
@@ -58,31 +55,27 @@ CNN 기반 모델이 이미지가 주어졌을 때 자동차인지, 비행기인
 
 ### YOLO 시스템 모델
 
-![](/img/medium/1-1TI6X-vN0WEmZxKXaFH8NA-ce8c0419bda1.png)
+![](/img/medium/1-1TI6X-vN0WEmZxKXaFH8NA-ce8c0419bda1.png "[그림 4] YOLO 시스템 모델")
 
-[그림 4] YOLO 시스템 모델
 
 위 그림은 대략적인 구조를 나타내긴 하지만, 중요한 점은 YOLO의 감지 시스템은 R-CNN과는 달리 합성곱 신경망을 단 한 번 통과시킨다. 신경망의 결과로는 각 객체의 바운딩 박스와 해당 객체가 무엇인지 분류 확률을 출력한다. 최종적으로는 이 값을 Non-max suppression을 통해 리전을 결정한다.
 
 이제 YOLO 모델을 구성하는 각 컴포넌트를 설명하기 전에 몇가지 용어와 사실을 알고가면 좋다. 우선, YOLO는 지도학습이고 논문에서 사용한 PASCAL VOC 데이터 셋에는 물체에 대한 클래스 C와 위치 정보인 X, Y, WIDTH, HEIGHT가 트레이닝 셋으로 제공된다. 아래 그림은 학습 데이터로 제공된 이미지이다. 이 때 X, Y의 기준점은 좌측 위가 아닌 물체의 정중앙을 말한다.
 
-![](/img/medium/1-_L_B8iP-P3Jm_kwLdj67Hw-b8188ef2e93f.png)
+![](/img/medium/1-_L_B8iP-P3Jm_kwLdj67Hw-b8188ef2e93f.png "[그림 5] PASCAL VOC(Visual Object Classes) 데이터 셋")
 
-[그림 5] PASCAL VOC(Visual Object Classes) 데이터 셋
 
 YOLO가 사용하고 있는 네트워크에 이미지를 통과하면 결과 값으로 SxS 그리드 셀의 클래스 정보 C와 예측된 바운딩 박스 B와 Confidence Score가 주어진다. 본 논문에서는 그리드 셀의 개수를 7개로, 각 셀마다 생성하는 바운딩 박스는 2개, 20개의 클래스를 탐지하는 모델을 테스트 했다. [그림 6]은 YOLO 네트워크의 결과를 보여준다.
 
-![](/img/medium/1-9gnDERhMNGk2Z9FNnNyOaA-a68f5908647d.png)
+![](/img/medium/1-9gnDERhMNGk2Z9FNnNyOaA-a68f5908647d.png "[그림 6] 이미지가 YOLO Model을 통과한 결과")
 
-[그림 6] 이미지가 YOLO Model을 통과한 결과
 
 본 논문에서 제시하는 시스템은 이미지를 7 x 7 (S x S)의 그리드 셀로 나눈다. 이렇게 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 한다. [그림 6]을 보면 7 x 7의 셀로 이미지가 나누어진 것을 알 수 있다. 각 셀은 <strong>바운딩 박스 B</strong>와 분류한 <strong>클래스의 확률인 C</strong>를 예측한다.
 
 <strong>바운딩 박스</strong>부터 설명하자면, 바운딩 박스 B는 X, Y 좌표, 가로, 세로 크기 정보와 Confidence Score (Score)수치를 가지고 있다. Score는 B가 물체를 영역으로 잡고 있는지와 클래스를 잘 예측하였는지를 나타낸다. 본 논문에서는 Score를 간단하게 $\Pr(\mathrm{Object}) \cdot \operatorname{IOU}$로 정의하고 있는데, $\Pr(\mathrm{Object})$는 바운딩 박스 안에 물체가 존재할 확률이다. 만약 바운딩 박스가 배경만을 영역으로 잡고 있다면 Pr(Object)의 값이 0이므로 Score는 0이된다. IOU는 Intersection over Union의 약자로 학습 데이터의 바운딩 박스와 예측한 바운딩 박스가 일치하는 정도를 나타낸다. 아래 그림은 IOU를 계산하는 방법을 보여준다[5].
 
-![](/img/medium/1-mNLT8UOfha5-Qvhk7OLhpA-4bab0aba1c42.png)
+![](/img/medium/1-mNLT8UOfha5-Qvhk7OLhpA-4bab0aba1c42.png "[그림 7] Intersection over Union")
 
-[그림 7] Intersection over Union
 
 <strong>클래스 확률 C</strong>는 그리드 셀 안에 있는 그림의 분류 확률을 나타낸다. 기호로는 $\Pr(\mathrm{Class}_i \mid \mathrm{Object})$로 표현하며 B가 배경이 아닌 객체를 포함하는 경우의 각 클래스의 조건부 확률이다. B가 배경을 예측했다면 확률은 0이 된다. 최종적으로 클래스 조건부 확률 C와 각 바운딩 박스의 Confidence 예측 값을 곱하면 각 박스의 클래스별 Confidence Score 수치를 구할 수 있다.
 
@@ -90,9 +83,8 @@ YOLO가 사용하고 있는 네트워크에 이미지를 통과하면 결과 값
 
 ### 네트워크 디자인 — Network Design
 
-![](/img/medium/1-Xn6RgHiav56W-vJm_5uhsw-49c8d469843c.png)
+![](/img/medium/1-Xn6RgHiav56W-vJm_5uhsw-49c8d469843c.png "[그림 8] YOLO의 학습 네트워크 설계")
 
-[그림 8] YOLO의 학습 네트워크 설계
 
 지금부터 YOLO가 이미지를 학습하고, 예측하는데 이용하는 전체 네트워크 디자인과 손실 함수(Loss Function)을 간단히 소개하고자 한다. 위 [그림 8]은 YOLO의 전체 네트워크 구조를 보여준다. YOLO는 24개의 Convolutional Layer(Conv Layer)와 2개의 Fully-Connected Layer(FC Layer)로 연결된 구조를 사용하고 있다. 설명을 쉽게 하기 위해서 논문에서 제공한 그림에서 크게 Pre-trained Network, Training Network 그리고 Reduction Layer 영역을 그려서 구분하였고 지금부터 각 영역을 소개한다.
 
@@ -115,9 +107,8 @@ YOLO는 마지막 Training Network를 학습하기 위해 손실 함수를 설�
 
 YOLO는 1번 원칙을 지키기 위해 Loss Function 에서 Sum-Squared Error(SSD)를 이용한다. 그리고 2번 원칙을 만족하기 위해서 $\lambda_{coord}$와 $\lambda_{noobj}$ 두 개의 변수를 이용한다. 본 논문에서는 $\lambda_{coord}$ = 5, $\lambda_{noobj}$ = 0.5로 설정하였다. 아래 [그림 9]는 YOLO의 Loss Function을 보여준다.
 
-![](/img/medium/1-tET4LVYKpTiM7m6ITv15zA-2aec5f8a6465.png)
+![](/img/medium/1-tET4LVYKpTiM7m6ITv15zA-2aec5f8a6465.png "[그림 9] YOLO Training Network의 Loss Function")
 
-[그림 9] YOLO Training Network의 Loss Function
 
 위 Loss Function에서 각 기호가 나타내는 의미는 아래와 같다.
 
@@ -133,17 +124,15 @@ YOLO는 1번 원칙을 지키기 위해 Loss Function 에서 Sum-Squared Error(S
 
 위 Loss Function을 이용해서 네트워크를 학습한 뒤, 예측을 하면 각 셀마다 여러 장의 바운딩 박스가 생기게 된다. 그 중 물체의 중심에 있는 셀이 보통 Loss Function의 연두색 2번 기호에 해당하기 때문에 물체의 중심을 중심으로 그려진 바운딩 박스는 Confidence Score가 더 높게 나오고, 물체의 중심으로 부터 먼 셀이 만드는 바운딩 박스는 Score가 작게 나오게 된다. 그리고 최종적으로 여러 개의 바운딩 박스를 합치는 Non-max suppression 과정을 거쳐 이미지의 객체를 탐지할 수 있게 된다.
 
-![](/img/medium/1-947T5c0fggxuGkeAlEZEKw-4a32b76feac5.png)
+![](/img/medium/1-947T5c0fggxuGkeAlEZEKw-4a32b76feac5.png "[그림 10] Non-max suppression가 수행되기 전과 수행된 후")
 
-[그림 10] Non-max suppression가 수행되기 전과 수행된 후
 
 ### 성능 — Performance
 
 YOLO의 논문에서는 객체 탐지를 수행하는 모델인 DPM, R-CNN, Fast R-CNN, Faster R-CNN과 YOLO 원래 네트워크에서 설계를 간소화 해서 사용하여 정확도를 포기하고 성능을 높인 Fast-YOLO 등의 모델의 정확도(mAP)와 초당 프레임 수(FPS)를 비교하였다. 여기서 mAP는 mean Average Precision의 약자로 객체 탐지 분야에서 성능을 평가하기 위해 사용하는 수치이다. [그림 11]은 PASCAL VOC 2007의 데이터 셋을 학습하여 mAP와 FPS를 나타낸 수치이다.
 
-![](/img/medium/1-iIyKYjpuZ1Q19M10YiCNeg-4c12dc930b7a.png)
+![](/img/medium/1-iIyKYjpuZ1Q19M10YiCNeg-4c12dc930b7a.png "[그림 11] YOLO 모델의 퍼포먼스")
 
-[그림 11] YOLO 모델의 퍼포먼스
 
 위 표를 보면 YOLO는 63.4 mAP를 가지며 초당 45장의 이미지를 처리 할 수 있다. 그리고 네트워크를 경량화 하여 개발한 Fast YOLO는 정확도는 조금 포기했지만 155 FPS의 성능을 보여준다. YOLO가 가장 정확도가 높은 모델은 아니지만 이 논문이 작성될 당시에는 가장 빠른 처리속도를 가진 모델이고 영상에서도 프레임이 끊기지 않고 부드럽게 객체를 탐지할 수 있다. 표를 보는 것보다 아래 영상을 통해 직접 느껴보는 것을 추천한다.
 

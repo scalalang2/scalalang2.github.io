@@ -10,9 +10,8 @@ tags: []
 
 해당 논문의 저자는 [LMCache](https://lmcache.ai/)[2]라는 이름의 오픈소스를 개발했고, LMCache는 vLLM 위에서 동작하며 RAG 기반의 프롬프트를 처리할 때 추론 속도를 높이는데 도움을 줍니다.
 
-![](/img/medium/1-yAfO-ZvgWNl_-7YD6UmR8A-ce3a0e256510.png)
+![](/img/medium/1-yAfO-ZvgWNl_-7YD6UmR8A-ce3a0e256510.png "vLLM을 LMCache와 함께 사용할 때 TTFT가 큰 폭으로 개선된다고 소개하고 있습니다.")
 
-vLLM을 LMCache와 함께 사용할 때 TTFT가 큰 폭으로 개선된다고 소개하고 있습니다.
 
 > 본업이 아닌 취미로 논문을 읽는 사람의 시선에서 정리한 내용입니다. 혹시 알고 계신 것과 다른 내용이 있거나 궁금한 점이 있으시면 피드백 부탁드립니다.
 
@@ -38,13 +37,11 @@ vLLM을 LMCache와 함께 사용할 때 TTFT가 큰 폭으로 개선된다고 �
 
 각 레이어에서는 들어온 입력에 대해 <strong>쿼리(Q), </strong>키(K), <strong>밸류(V)</strong> 벡터를 생성하고 이들 간 내적 연산을 통해 각 토큰이 얼마나 다른 토큰과 강하게 의미가 연결되는지 계산합니다.
 
-![](/img/medium/1-CyCNFP2Nlv35eCndoUrbcA-255f30f77eaa.png)
+![](/img/medium/1-CyCNFP2Nlv35eCndoUrbcA-255f30f77eaa.png "트랜스포머 구조")
 
-트랜스포머 구조
 
-![](/img/medium/1-UqfoFl9G-EWguxGxwn_hNw-ce22331b8b31.png)
+![](/img/medium/1-UqfoFl9G-EWguxGxwn_hNw-ce22331b8b31.png "어텐션 계산 수식")
 
-어텐션 계산 수식
 
 ## KV 캐시
 
@@ -54,9 +51,8 @@ KV캐시[[4]](https://huggingface.co/blog/not-lain/kv-caching)[[5]](https://medi
 
 인코더 과정에서의 Self-Attention과 달리, 디코더에서 t 번째 토큰의 어텐션 계산에 필요한 값은 이전 토큰들의 Key 벡터와 Value 벡터 뿐입니다. 이를 캐싱해서 불필요한 어텐션 계산 과정을 줄이면 <strong>시간복잡도가 2차함수 O(n²)에서 선형시간 O(n) 으로 줄어듭니다.</strong> (이때 n은 입력 시퀀스 길이)
 
-![](/img/medium/1-TP4ZF0A3tbTz2IsjRJQ7Ug-0bc15afe52d7.png)
+![](/img/medium/1-TP4ZF0A3tbTz2IsjRJQ7Ug-0bc15afe52d7.png "KV 캐시를 활용한 계산 방법 / 행렬 차원은 고려하지 않고 대충 그린 그림입니다. [(그림 출처)](https://medium.com/@plienhar/llm-inference-series-4-kv-caching-a-deeper-look-4ba9a77746c8)")
 
-KV 캐시를 활용한 계산 방법 / 행렬 차원은 고려하지 않고 대충 그린 그림입니다. [(그림 출처)](https://medium.com/@plienhar/llm-inference-series-4-kv-caching-a-deeper-look-4ba9a77746c8)
 
 위 그림은 어텐션 레이어 하나에 대해서 표현한 것이지만, 실제로는 모든 트랜스포머 레이어에서 KV 캐시를 저장해야 합니다. 임의의 층 L에서의 입력값은 L-1 층에서의 결과값인 W_O 의 어텐션 결과값이기 때문에 이전 토큰의 K/V 벡터를 캐싱한다는 것은이전 토큰의 어텐션 결과값을 캐싱한다는 의미 입니다. [(LLaMA 2–7B 모델은 32개의 트랜스포머 레이어를 가지고 있습니다)](https://arxiv.org/pdf/2312.04333)
 
@@ -68,9 +64,8 @@ KV캐시의 의미 자체는 디코딩 과정에서 나오는 K/V 벡터를 캐�
 
 LLM은 학습한 시점 이후부터는 새로 추가된 지식이 없기 때문에, 이미 과거가 되어버린 정보를 줄 수 있다는 단점이 있습니다. 주기적으로 다시 학습시키면 되겠지만 비용 부담이 크기 때문에 최근에는 RAG를 통해 이를 극복하고자 하는 시도가 많습니다.
 
-![](/img/medium/0-26YnsfeB_3dxB1Ur-8612c42e796f.png)
+![](/img/medium/0-26YnsfeB_3dxB1Ur-8612c42e796f.png "[Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)")
 
-[Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
 
 [<strong>RAG의 짧은 역사 훑어보기(첫 논문부터 최근 동향까지)</strong>\
 *해당 글은 필자의 블로그에 이미 발간된 글입니다.*medium.com](https://medium.com/rate-labs/rag%EC%9D%98-%EC%A7%A7%EC%9D%80-%EC%97%AD%EC%82%AC-%ED%9B%91%EC%96%B4%EB%B3%B4%EA%B8%B0-%EC%B2%AB-%EB%85%BC%EB%AC%B8%EB%B6%80%ED%84%B0-%EC%B5%9C%EA%B7%BC-%EB%8F%99%ED%96%A5%EA%B9%8C%EC%A7%80-53c07b9b3bee "https://medium.com/rate-labs/rag%EC%9D%98-%EC%A7%A7%EC%9D%80-%EC%97%AD%EC%82%AC-%ED%9B%91%EC%96%B4%EB%B3%B4%EA%B8%B0-%EC%B2%AB-%EB%85%BC%EB%AC%B8%EB%B6%80%ED%84%B0-%EC%B5%9C%EA%B7%BC-%EB%8F%99%ED%96%A5%EA%B9%8C%EC%A7%80-53c07b9b3bee")[](https://medium.com/rate-labs/rag%EC%9D%98-%EC%A7%A7%EC%9D%80-%EC%97%AD%EC%82%AC-%ED%9B%91%EC%96%B4%EB%B3%B4%EA%B8%B0-%EC%B2%AB-%EB%85%BC%EB%AC%B8%EB%B6%80%ED%84%B0-%EC%B5%9C%EA%B7%BC-%EB%8F%99%ED%96%A5%EA%B9%8C%EC%A7%80-53c07b9b3bee)
@@ -90,9 +85,8 @@ Prefix Caching이란 LLM 에이전트의 시스템 프롬프트처럼 무조건 
 
 아래 그림은 메시와 호날두의 피파 월드컵 통산 골 수를 비교하는 입력을 넣었을 때 두 선수의 기록을 각각 찾아서 이어붙인 사례를 보여줍니다. 두 문장의 K/V 캐시를 그냥 이어붙이면 답변을 제대로 못하는 것을 볼 수 있습니다. (메호대전을 언급하다니..)
 
-![](/img/medium/1-qfsgQzt0JlWW4wyU78yCNg-957d7775e73d.png)
+![](/img/medium/1-qfsgQzt0JlWW4wyU78yCNg-957d7775e73d.png "그림 출처 : CacheBlend 논문")
 
-그림 출처 : CacheBlend 논문
 
 > <strong>번외</strong>\
 > RAGCache는 논문을 대충 훑어보기만 했는데요. 방법론 자체가 Prefix에 자주 등장하는 텍스트의 K/V 캐시를 더 메모리에 오래 상주시키자는 아이디어에서 출발합니다. CacheBlend와는 접근법이 많이 다르기 때문에 이정도로만 짧게 소개하겠습니다.
@@ -106,9 +100,8 @@ Prefix Caching이란 LLM 에이전트의 시스템 프롬프트처럼 무조건 
 
 PromptCache(= Full KV reuse)의 답변 품질이 감소하는 이유는, 앞서 말했듯 <strong>문장과 문장 사이의 어텐션(cross chunk attention)</strong>을 무시하기 때문입니다.
 
-![](/img/medium/1-g8O9LoVoLRTFZj87fk4qBw-484291ed8396.png)
+![](/img/medium/1-g8O9LoVoLRTFZj87fk4qBw-484291ed8396.png "(a) KV 값을 처음부터 계산한 경우, (b) Full KV reuse를 사용한 경우")
 
-\(a\) KV 값을 처음부터 계산한 경우, (b) Full KV reuse를 사용한 경우
 
 > <strong>번외 1)</strong>
 > RAG에서 텍스트 청크 개수가 많아지면 처음엔 성능이 증가하다가 이후 어느 순간 감소하는 것을 볼 수 있습니다. 이는 LLM이 초반부와 마지막에 있는 문장은 집중해서 보고, 문장 가운데에 있는 정보는 잃어버리는 경향이 있다는 스탠포드 및 UC Berkeley 연구진이 보고한 [Lost in the Middle[9]](https://arxiv.org/pdf/2307.03172) 문제와 관련이 있습니다.
@@ -116,9 +109,8 @@ PromptCache(= Full KV reuse)의 답변 품질이 감소하는 이유는, 앞서 
 > <strong>번외 2)</strong>
 > CacheBlend는 PromptCache의 논문을 인용했지만, 사실 PromptCache 에서 해결하고자 하는 문제는 RAG가 아닌 템플릿화된 프롬프트에서 성능을 높이는 방법입니다. 이 둘을 직접 비교하긴 어려우나 제 개인적인 생각으로는 CacheBlend가 상위호환처럼 보이기는 합니다.
 
-![](/img/medium/1-uhMFyZZnnlmyeSpMPS5jaw-456cd20acdfd.png)
+![](/img/medium/1-uhMFyZZnnlmyeSpMPS5jaw-456cd20acdfd.png "[출처 : PromptCache](https://arxiv.org/pdf/2311.04934)")
 
-[출처 : PromptCache](https://arxiv.org/pdf/2311.04934)
 
 ## CacheBlend
 
@@ -177,13 +169,11 @@ CacheBlend의 평가 결과를 요약하면 3가지로 말할 수 있습니다.
 
 <strong>높은 처리량 :</strong> CacheBlend는 3.3x ~ 5x 높은 처리량을 가진다. (RAG 환경에서의 성능 비교이기 때문에 어쩌면 당연한 결과입니다. 다른 방법론들은 RAG에서 가져오는 청크 크기가 클수록 TTFT가 선형적으로 느려질 것입니다)
 
-![](/img/medium/1-7pcwKkGh8tKi6ACH2wNYNA-59f793e822d0.png)
+![](/img/medium/1-7pcwKkGh8tKi6ACH2wNYNA-59f793e822d0.png "퀄리티는 유지하면서 TTFT는 개선했다 (청크 개수 = 6)")
 
-퀄리티는 유지하면서 TTFT는 개선했다 (청크 개수 = 6)
 
-![](/img/medium/1-uGZtDkknSgR_b9ydz3vjYw-29078eb64683.png)
+![](/img/medium/1-uGZtDkknSgR_b9ydz3vjYw-29078eb64683.png "요청 수가 증가해도 타 모델 대비 안정적인 TTFT를 보여준다")
 
-요청 수가 증가해도 타 모델 대비 안정적인 TTFT를 보여준다
 
 ## 마무리
 

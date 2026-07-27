@@ -10,9 +10,8 @@ tags: []
 
 2023년 8월, 컴퓨터 그래픽스 최대 학회인 SIGGRAPH에서 발표된 하나의 논문이 학계에서 굉장히 많은 관심을 받고 있습니다.
 
-![](/img/medium/1-KZ7qEQjJErplS2aAy5QITw-8c694eeb47cc.png)
+![](/img/medium/1-KZ7qEQjJErplS2aAy5QITw-8c694eeb47cc.png "[3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://arxiv.org/abs/2308.04079)")
 
-[3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://arxiv.org/abs/2308.04079)
 
 이 논문에서 풀고자 하는 문제는 이미지 데이터를 3D 물체 혹은 공간으로 재구성 하는 겁니다.
 
@@ -24,17 +23,15 @@ Gaussian Splatting 데모 영상
 
 2010년도 부터 딥러닝 기반의 AI가 급속도로 발전하기 시작했고, 2020년에는 UC 버클리에서 3D공간을 딥러닝 모델로 해석하는 [NeRF(Neural Radiance Field)](https://www.matthewtancik.com/nerf)가 등장합니다.
 
-![](/img/medium/1-svRJgJ2vLfi662mVMmntIw-39fc6c8e0c17.png)
+![](/img/medium/1-svRJgJ2vLfi662mVMmntIw-39fc6c8e0c17.png "[NeRF의 구조도](https://www.matthewtancik.com/nerf)")
 
-[NeRF의 구조도](https://www.matthewtancik.com/nerf)
 
 NeRF는 지금까지 Google Research를 비롯한 많은 곳에서 적극적으로 연구하기 시작하면서 발전해왔는데요. 그러던 중 2023년 8월에 Gaussian Splatting이 SIGGRAPH에 발표되면서 그동안 NeRF가 주도해온 연구 패러다임을 한 번 깨고 이제는 거의 양분하는 것 처럼 보입니다.
 
 Gaussian Splatting을 특히 주목할 만한 건 <strong>① 이 친구는 딥러닝 모델이 아니라는 점</strong>과 <strong>② NeRF에 비해 연산 효율이 좋아서 고해상도(1080p)로 높은 FPS로 실시간 렌더링이 가능하다는 점</strong>입니다. 이번 글에서는 Gaussian Splatting에 대해 알아보고 이것이 게임 개발의 패러다임을 어떻게 바꾸게 될지 상상해보는 시간을 가져보겠습니다.
 
-![](/img/medium/1-KrqP65f7yxWo0eHI4B9VyA-0e22f1f2d587.png)
+![](/img/medium/1-KrqP65f7yxWo0eHI4B9VyA-0e22f1f2d587.png "[Evaluation of Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)")
 
-[Evaluation of Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
 
 > <strong>Disclaimer</strong>
 > 우선 저는 그래픽스 전문가가 아니기 때문에 설명이 부족한 부분이 많습니다. 이 글은 저와 같이 그래픽스 관련 개념이 생소하신 분들이 3D GS를 입문할 때 보시기에 적당할 거라고 기대하고 있습니다.
@@ -53,9 +50,8 @@ Gaussian Splatting을 특히 주목할 만한 건 <strong>① 이 친구는 딥�
 
 NeRF는 다양한 각도에서 촬영한 이미지를 학습해서 3D 공간 정보를 가지고 있는 신경망을 말합니다. 네트워크 자체는 간단한 Fully-connected Network로 구성되어 있으며 <strong>3D 공간의 위치 좌표(x, y, z)</strong>와 <strong>카메라가 사물을 바라보는 각도</strong>가 입력으로 주어지고 출력으로는 해당 점의 색상을 반환합니다.
 
-![](/img/medium/1-E9GnILb77xHaAilz5IchvQ-4602e636c051.png)
+![](/img/medium/1-E9GnILb77xHaAilz5IchvQ-4602e636c051.png "NeRF 학습 구조도 [1]")
 
-NeRF 학습 구조도 [1]
 
 위 그림은 논문에 삽입된 그림으로 NeRF의 동작을 잘 보여주고 있습니다. 카메라에서 Ray를 보내 3D의 위치에 대한 색상을 얻어서 Volume Rendering 기법으로 최종적으로 2D 화면에 투영될 색상을 결정합니다.
 
@@ -68,23 +64,20 @@ NeRF 학습 구조도 [1]
 
 게임을 좋아하시는 분들은 3D 그래픽을 폴리곤으로 이루어진 Mesh로 표현한다는 사실을 아실겁니다. 3D 데이터를 표현하는 방법 중에 3차원 공간 전체를 점들의 집합으로 표현하는 <strong>포인트 클라우드(Point Cloud)</strong>가 있습니다. 이는 자율주행차의 눈 역할을 하는 라이다(LiDAR) 센서가 세상을 인식하는 방식이기도 합니다.
 
-![](/img/medium/1-DhyvTuotg-GoK1gDWmPMDg-b01cbd8fff36.png)
+![](/img/medium/1-DhyvTuotg-GoK1gDWmPMDg-b01cbd8fff36.png "출처 : [https://ouster.com/downloads/sample-lidar-data](https://ouster.com/downloads/sample-lidar-data)")
 
-출처 : [https://ouster.com/downloads/sample-lidar-data](https://ouster.com/downloads/sample-lidar-data)
 
 이미지로부터 포인트 클라우드와 실제 카메라의 위치를 계산하는 방법은 오래전부터 연구되어 왔습니다. OpenMVG[2] 오픈소스를 이용하면 이 과정을 쉽게 구현할 수 있습니다. 하지만 포인트 클라우드는 공간 표현이 불연속적이며, 엘리어싱 및 holes를 만드는 문제가 있습니다.
 
 <strong>3D GS(Gaussian Splatting)</strong>은 포인트 클라우드를 확장한 개념으로 각 좌표에 존재하는 포인트는 점이 아닌 3차원 가우시안 분포를 가집니다.
 
-![](/img/medium/1-mkRwZp3r5wNQKxl1wD6krA-97ab61cb7c62.png)
+![](/img/medium/1-mkRwZp3r5wNQKxl1wD6krA-97ab61cb7c62.png "source: [(1)](https://en.wikipedia.org/wiki/Gaussian_function), [(2)](https://math.stackexchange.com/questions/2580887/is-there-any-graphical-explanation-of-multivariate-gaussian), [(3)](https://www.researchgate.net/figure/sualization-of-a-3D-Gaussian-model-a-Uncertainty-ellipsoid-for_fig5_231212225), 아이디어 출처 : [xoft 블로그](https://xoft.tistory.com/49)")
 
-source: [(1)](https://en.wikipedia.org/wiki/Gaussian_function), [(2)](https://math.stackexchange.com/questions/2580887/is-there-any-graphical-explanation-of-multivariate-gaussian), [(3)](https://www.researchgate.net/figure/sualization-of-a-3D-Gaussian-model-a-Uncertainty-ellipsoid-for_fig5_231212225), 아이디어 출처 : [xoft 블로그](https://xoft.tistory.com/49)
 
 그리고 포인트 클라우드 처럼 여러 좌표에 값을 가지고 있기 때문에 아래 그림과 닮은 데이터를 얻게 됩니다.
 
-![](/img/medium/1-URxFwtUHiz8YCK_NZXypRA-ba6733cc2d77.png)
+![](/img/medium/1-URxFwtUHiz8YCK_NZXypRA-ba6733cc2d77.png "3차원 공간에 3개의 3D Gaussian이 존재하고 있다.")
 
-3차원 공간에 3개의 3D Gaussian이 존재하고 있다.
 
 3D GS 내용을 본격적으로 탐구하기 전에 이렇게 표현된 결과물이 렌더링된 결과를 보겠습니다. 아래 그림은 <strong>2024년 게임 개발자 컨퍼런스(GDC)</strong>에서 사진으로 사물을 스캔하는 앱인 [KIRI Engine](https://apps.apple.com/us/app/kiri-engine-3d-scanner-lidar/id1577127142) 개발사 발표의 한 장면입니다[3].
 
@@ -94,9 +87,8 @@ source: [(1)](https://en.wikipedia.org/wiki/Gaussian_function), [(2)](https://ma
 
 처음에 3D GS는 딥러닝 방식이 아니라고 언급했습니다. 대신, <strong>경사 하강법(Gradient Descent)</strong>을 통해 파라미터를 최적화하여 사물을 잘 표현하는 가우시안을 얻습니다. 경사 하강법은 딥러닝 이전부터 존재했던 최적화 이론의 기법이므로 논문에서는 이 과정을 <strong>‘학습’</strong>이 아닌 <strong>‘최적화’</strong> 단계로 표현합니다
 
-![](/img/medium/1-btuSw3GuCn7Y1wgdvUG_OQ-053d73c01103.png)
+![](/img/medium/1-btuSw3GuCn7Y1wgdvUG_OQ-053d73c01103.png "3D GS 전체 구조도 [4]")
 
-3D GS 전체 구조도 [4]
 
 손실 함수를 정의하고, 오차를 미분하여 파라미터를 조정하는 방식은 딥러닝의 기본 원리와 유사하기 때문에 완전히 낯설지는 않으실 거라고 생각합니다.
 
@@ -128,7 +120,7 @@ pdf_values = multivariate_normal.pdf(points, mean=mean, cov=cov)\
 \
 plt.show()
 
-![](/img/medium/1-bLpt2sDCqmiSBEQ0rN6ATQ-05dd46dc670a.png)
+![](/img/medium/1-bLpt2sDCqmiSBEQ0rN6ATQ-05dd46dc670a.png "공분산 행렬 Σ 로 시각화한 3차원 가우시안 데이터")
 
 ### 공분산 행렬 Σ 로 시각화한 3차원 가우시안 데이터
 
@@ -138,17 +130,15 @@ plt.show()
 
 수식은 2001년에 발표된 <strong>EWA Volume Splatting[5]</strong> 논문에서 소개된 내용입니다. 3D GS 논문은 이를 사용했다고만 간단히 언급했습니다.
 
-![](/img/medium/1-7S27cZJZIiTklH1rtYNkPg-68242ee1fcf7.png)
+![](/img/medium/1-7S27cZJZIiTklH1rtYNkPg-68242ee1fcf7.png "source : EWA Volume Splatting [5]")
 
-source : EWA Volume Splatting [5]
 
 - <strong>W :</strong> (0,0)을 원점으로 가진 가우시안 분포를 카메라의 위치를 원점으로 하는 곳으로 선형변환 하는 행렬입니다.
 - J : <strong>자코비안(Jacobian)</strong>행렬로 비선형 변환된 값을 국소적으로 선형 변환으로 근사하는 역할을 합니다. 자세한 내용은 공돌이의 [<strong>수학 정리 노트[6]</strong>](https://angeloyeo.github.io/2020/07/24/Jacobian.html#google_vignette)에 소개되어 있습니다.
 - 마지막 W^T 및 J^T는 공분산 행렬의 Key Property중 하나로 결과값의 대칭성을 유지하는 역할을 합니다.
 
-![](/img/medium/1-RkXfHpDj-AqClzkal6j48w-fae0dfa54b05.png)
+![](/img/medium/1-RkXfHpDj-AqClzkal6j48w-fae0dfa54b05.png "Jacobian 행렬의 기하학적 의미")
 
-Jacobian 행렬의 기하학적 의미
 
 > Jacobian term이 붙은게정확히 어떤 의미를 가지는지는 제 역량이 부족해서 제대로 이해하지 못했습니다. 수식의 유도 과정은 [다음 글[7]](https://qiita.com/scomup/items/f8632151712828e9625d)에서 더 자세히 설명되어 있습니다.
 
@@ -170,9 +160,8 @@ np.random.multivariate_normal(mean=[0, 0], cov=cov, size=1000)\
 
 3D GS는공분산 행렬의 각 원소들을 <strong>Graident Descent</strong>로 학습하기 때문에 자칫 <strong>대칭성</strong>이나 <strong>정부호 행렬의 성질</strong>을 잃어버릴 수 있습니다. 3D GS는 이 문제를 해결하기 위해 직관적인 방법을 사용하는데 가우시안을 타원체의 도형으로 취급하는 겁니다. 이 타원체는 <strong>Rotation Matrix(R)</strong>와 <strong>Scaling Matrix(S)</strong>로 표현합니다.
 
-![](/img/medium/1-BsJK23EzlEJF8TKUyoyq1w-c217d093109c.png)
+![](/img/medium/1-BsJK23EzlEJF8TKUyoyq1w-c217d093109c.png "회전을 표현하는 쿼터니언과 Scaling Matrix로 타원체를 표현하고 있다.")
 
-회전을 표현하는 쿼터니언과 Scaling Matrix로 타원체를 표현하고 있다.
 
 R과 S두 행렬을 가지고 <strong>행렬 Σ</strong>는 아래 수식으로 표현합니다. 위에서 Σ를 어떻게 2차원에 투영시키는지 다루었었는데요. 그 때 사용합니다.
 
@@ -186,41 +175,35 @@ R과 S두 행렬을 가지고 <strong>행렬 Σ</strong>는 아래 수식으로 
 
 다시 말하면 위 수식은 타원체의 모양을 잘 나타내는 <strong>주축 방향(= 고유 벡터)</strong>와 주축 방향으로의 <strong>타원체의 크기(=고윳값)</strong>를 결정한다고 볼 수 있습니다.
 
-![](/img/medium/1-m9PFq5UkHsssB9IXc7ekNQ-d4e9b6d9e8b4.png)
+![](/img/medium/1-m9PFq5UkHsssB9IXc7ekNQ-d4e9b6d9e8b4.png "[source : 주성분 분석(PCA) — 공돌이의 수학 노트](https://angeloyeo.github.io/2019/07/27/PCA.html#google_vignette)")
 
-[source : 주성분 분석(PCA) — 공돌이의 수학 노트](https://angeloyeo.github.io/2019/07/27/PCA.html#google_vignette)
 
 > <strong>쿼터니언</strong>\
 > 물체의 회전이라는 건 각 Pitch, Roll, Yaw 각 축에 대해 회전한 정도로 표현할 수 있는데요. 이를 직접 사용하는 오일러 각은 연산도 비효율적이며 짐벌 락(Gimbal Lock)현상이 발생하기 때문에 게임 개발할 때는 흔히 회전을 <strong>쿼터니언</strong>으로 변환시켜서 사용하곤 합니다. 위 수식에서 R은 쿼터니언에서 사용하는 행렬로 i, j, k, r 4개의 변수를 가지고 있습니다.
 
 > 유명한 [*수학 채널 3Blue1Borwn*](https://www.youtube.com/watch?v=d4EgbgTm0Bg) 에서 쿼터니언에 대해 다룬 적이 있습니다.
 
-![](/img/medium/1-LWzqte3Cf50nnnOLD66IWw-89c9d5ba1941.png)
+![](/img/medium/1-LWzqte3Cf50nnnOLD66IWw-89c9d5ba1941.png "[[source](https://www.researchgate.net/figure/a-Pitch-yaw-and-roll-angles-of-an-aircraft-with-body-orientation-O-u-v-original_fig7_348803228)]")
 
-[[source](https://www.researchgate.net/figure/a-Pitch-yaw-and-roll-angles-of-an-aircraft-with-body-orientation-O-u-v-original_fig7_348803228)]
 
 ③ Spherical Harmonics \| 색상 표현하기 \
 사물은 바라보는 방향에 따라 보이는 색상이 다릅니다.<strong> 이를 (2)에서 정의한 타원체에 표현시키기 위해서 </strong>구면 조화 함수(Spherical Harmonics)를 사용하는데요. 이는 언리얼 엔진에서 광원 효과를 주는 볼류메트릭 라이트맵[8]의 원리이기도 합니다.
 
-![](/img/medium/1-JCxufrbXs9iYMpuDJg1Fag-7a8e6850d600.png)
+![](/img/medium/1-JCxufrbXs9iYMpuDJg1Fag-7a8e6850d600.png "흠.. 대학원 양자역학이요..?")
 
-흠.. 대학원 양자역학이요..?
 
 먼저 X축, Y축으로 이루어진 평면 좌표계 대신 구면좌표계라는 개념이 있습니다. 이 좌표계는 두개의 각도 <strong>θ, Ψ</strong>로 구체에서 특정 방향의 값을 표현하는데요. 이 때 반지름은 무시합니다. <strong>구면 조화 함수(Spherical Harmonics)</strong>는 이 두개의 각도를 입력받아서 특정 값을 반환하는 함수입니다.
 
-![](/img/medium/1-3Bw1JzsW50nROyHY6o-0ng-fae86f855abf.png)
+![](/img/medium/1-3Bw1JzsW50nROyHY6o-0ng-fae86f855abf.png "source : [Spherical Coordinates](https://mathworld.wolfram.com/SphericalCoordinates.html)")
 
-source : [Spherical Coordinates](https://mathworld.wolfram.com/SphericalCoordinates.html)
 
-![](/img/medium/1-DkZNXw8xxshdlEhH7-thaA-4e456ca81c31.png)
+![](/img/medium/1-DkZNXw8xxshdlEhH7-thaA-4e456ca81c31.png "[https://en.wikipedia.org/wiki/Spherical_harmonics](https://en.wikipedia.org/wiki/Spherical_harmonics)")
 
-[https://en.wikipedia.org/wiki/Spherical_harmonics](https://en.wikipedia.org/wiki/Spherical_harmonics)
 
 위 함수가 구면 조화 함수입니다. 파라미터 중에 l과 m은 각운동량 양자수니 자기 양자수니 하는 알 수 없는 말을 합니다. 허허.. <strong>우리는 저 수식은 머릿속에서 지워버리고 결과만 살펴보겠습니다.</strong>
 
-![](/img/medium/1-dkbctHf-9V8eI1H1Sj4bVA-c734b9594237.png)
+![](/img/medium/1-dkbctHf-9V8eI1H1Sj4bVA-c734b9594237.png "source : [Efficient HRTF Representation Using Compact Mode HRTFs](https://www.researchgate.net/figure/Real-part-of-a-set-of-spherical-harmonics-mapped-to-the-surface-of-a-sphere-The-colour_fig1_345372557)")
 
-source : [Efficient HRTF Representation Using Compact Mode HRTFs](https://www.researchgate.net/figure/Real-part-of-a-set-of-spherical-harmonics-mapped-to-the-surface-of-a-sphere-The-colour_fig1_345372557)
 
 위 구면체들의 집합은 구면조화 함수의 l과 m에 따른 변화된 모습입니다. 우측 그림을 보면 제가 파랑색에 화살표로 표시했는데요. 이는 이 함수의 결과값이 파랑색이라는게 아니라 비슷한 값을 반환한다는 의미입니다.
 
@@ -253,13 +236,11 @@ return color
 
 푸리에 변환을 들어보신 분들은 임의의 신호를 주기함수들의 합으로 분해할 수 있다는 걸 아실겁니다. 푸리에 변환은 서로 직교하는 기저 함수들의 선형 결합으로 표현합니다. 어떤 벡터A 를 기저 벡터의 선형 결합으로 표현하는 것과 같은 느낌입니다.
 
-![](/img/medium/1-Od2klXam3JO29J-NB_2-3g-95f60b54bf05.png)
+![](/img/medium/1-Od2klXam3JO29J-NB_2-3g-95f60b54bf05.png "벡터를 기저들의 선형 결합으로 표현하기")
 
-벡터를 기저들의 선형 결합으로 표현하기
 
-![](/img/medium/0-NYZUDEHsc6oe7OV0-dc8f896f0601.png)
+![](/img/medium/0-NYZUDEHsc6oe7OV0-dc8f896f0601.png "[source](https://www.nti-audio.com/ko/%EC%A7%80-%EC%9B%90/%EC%B8%A1%EC%A0%95-%EB%85%B8%ED%95%98%EC%9A%B0/%EB%B9%A0%EB%A5%B8-fourier-%EB%B3%80%ED%99%98-fft)")
 
-[source](https://www.nti-audio.com/ko/%EC%A7%80-%EC%9B%90/%EC%B8%A1%EC%A0%95-%EB%85%B8%ED%95%98%EC%9A%B0/%EB%B9%A0%EB%A5%B8-fourier-%EB%B3%80%ED%99%98-fft)
 
 위키피디아의 설명을 보면 구면조화함수는 3차원 공간에서 구면 표면 위의 함수를 표현하는 데 사용되는 <strong>직교 기저 함수 집합</strong>이라고 설명하고 있습니다. 이는 푸리에 급수와 유사한 방식으로 작동하여, 구면 위의 복잡한 함수를 더 단순한 기저 함수들의 가중 합으로 분해할 수 있게 해준다고 합니다[9].
 
@@ -278,9 +259,8 @@ Rasterization은 그래픽스에서 벡터 정보를 픽셀로 변환하는 과�
 - <strong>DuplicateWithKeys, SortByKeys</strong>는 가우시안 정보를 깊이(depth)를 기준으로 정렬해서 가까이 있는 사물에 더 많은 색상을 반영하도록 합니다.
 - 마지막으로 <strong>BlendInOrders</strong> 에서 가우시안 집합을 블렌딩 해서 픽셀의 색상을 결정하는데요. 이는 NeRF에서 볼류메트릭 렌더링의 원리와 유사합니다.
 
-![](/img/medium/1-CvVCRRSnVAdcIzIK5iYEHQ-1455ff08c096.png)
+![](/img/medium/1-CvVCRRSnVAdcIzIK5iYEHQ-1455ff08c096.png "source : Stanford Seminar — [Perception-Rich Robot Autonomy with Neural Environment Models](https://www.youtube.com/watch?v=eHr_jA8HnkA)")
 
-source : Stanford Seminar — [Perception-Rich Robot Autonomy with Neural Environment Models](https://www.youtube.com/watch?v=eHr_jA8HnkA)
 
 ## Optimization
 
@@ -301,9 +281,8 @@ Densification은 말 그대로 밀집도 있게 만드는 과정입니다. 아�
 
 이 값이 정해진 임계값 $τ_p(0.0002)$ 보다 크면 가우시안들이 최적화되지못하고 위치를 계속 변경하려고 한다고 봤습니다. 그래서, 크기에 대한 임계값 $τ_s$보다 크면 가우시안을 1.6x로 줄인 다음 분할하고 작다면 하나 더 복제합니다.
 
-![](/img/medium/1-QY7zW7eG7uIRz5YILUGMFQ-9254c23c8ef9.png)
+![](/img/medium/1-QY7zW7eG7uIRz5YILUGMFQ-9254c23c8ef9.png "source : [4]")
 
-source : [4]
 
 ## Evaluation
 
@@ -311,9 +290,8 @@ source : [4]
 
 ![](/img/medium/1-1RzsjWP_e-v6p4DbseumTw-c3e172ba8af0.png)
 
-![](/img/medium/1-q0vbfO2hMqn_y56C-SRUWw-df23c44f198d.png)
+![](/img/medium/1-q0vbfO2hMqn_y56C-SRUWw-df23c44f198d.png "source : [4]")
 
-source : [4]
 
 다음으로는 논문에서 저자들이 도입한 기법들이 꽤 많은데요. 각각의 기법을 비활성화 한 상태로 실험을 진행했을 때 본인들이 내린 결정들이 좋은 결정들이었는지는 평가합니다. 평가에 사용된 메트릭은 PSNR 점수 입니다.
 
@@ -334,9 +312,8 @@ source : [4]
 
 AI들이 이동할 때 최적 경로 계산에 활용되는 <strong>(1) Navigation Mesh</strong>이 없고 (2) 맵이 넓은 경우에는 멀리있는 사물은 대충 표현하고 카메라와 가까이 있는 건 디테일 하게 표현하는 LOD 기법들이 사용되곤 하는데요. 3D GS로는 사물의 형태를 유지하면서 미세하게 조정하기에는 어려워 보입니다.
 
-![](/img/medium/1-jgZ_JVuN1F-kefRN7bN9IA-0ddf4fcfa886.png)
+![](/img/medium/1-jgZ_JVuN1F-kefRN7bN9IA-0ddf4fcfa886.png "[[source]](https://3dstudio.co/3d-lod-level-of-detail/)")
 
-[[source]](https://3dstudio.co/3d-lod-level-of-detail/)
 
 \(3\) 물리엔진에 의한 충돌이나 레이 캐스팅, 그리고 (4) 물리 기반 렌더링 기법등을 사용할 수 없기 때문에 3D GS 자체로는 그대로 사용하기 어렵고 Mesh로 한 번 변환시켜 줘야 하는데요.
 

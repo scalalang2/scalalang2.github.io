@@ -10,9 +10,8 @@ tags: []
 
 사실 난 논문 읽는 것을 좋아한다고 하면 너무 찐인 것 같아서, 싫어하진 않는다고 말하겠다. 조직 생활을 시작하면서 대학원에서는 일상이었던 논문 리딩을 거의 하지 못했다. 마치 전공수업으로만 한 학기 다 채우다가 다음 학기에 교양과목을 들으면서 힐링하듯이, 코드만 매일 작성하다가 힐링으로 논문을 읽고 싶다고 생각했었는데, 2022년 If Kakao에서 엘라스틱 서치의 대안으로 Citus(이하 <strong>시투스</strong>라고 쓰겠음)를 쓰고 있다는 내용을 보고 난 후, 흥미가 생겨서 오랜만에 논문 한 편을 읽었다. 바로 알아가보자.
 
-![](/img/medium/1-THZMtKKqWn6yE3kOzz0uPA-60b885a39b78.png)
+![](/img/medium/1-THZMtKKqWn6yE3kOzz0uPA-60b885a39b78.png "엘라스틱 서치 대신에 PostgreSQL을 쓴다고?! 흥미롭지 않을 수 없다.")
 
-엘라스틱 서치 대신에 PostgreSQL을 쓴다고?! 흥미롭지 않을 수 없다.
 
 - Citus : 이 포스팅에서는 Citus를 시투스라고 표기한다. 실제 [발음은 사-이투스 이렇게 하는 것 같다. 정확하진 않음](https://www.youtube.com/watch?v=JwjjUT8K7po)
 - Citus Github : [https://github.com/citusdata/citus](https://github.com/citusdata/citus)
@@ -57,9 +56,8 @@ PostgreSQL를 이용하는 사례가 점점 늘어나고, 데이터의 규모가
 
 ## 시투스가 필요한 4가지 워크로드 패턴
 
-![](/img/medium/1-paowfN5xK0eCNzyUGM3MSQ-3668bfeaa6b7.png)
+![](/img/medium/1-paowfN5xK0eCNzyUGM3MSQ-3668bfeaa6b7.png "4가지 워크로드의 목표 성능")
 
-4가지 워크로드의 목표 성능
 
 위 테이블은 4가지 워크로드 패턴들의 목표 성능을 나타낸다. 차례로 다음과 같다.
 
@@ -70,9 +68,8 @@ PostgreSQL를 이용하는 사례가 점점 늘어나고, 데이터의 규모가
 
 ### 멀티 테넌트 서비스
 
-![](/img/medium/1-tPOQ_pk_J8V1-kwQKmviLg-dd72beff3852.png)
+![](/img/medium/1-tPOQ_pk_J8V1-kwQKmviLg-dd72beff3852.png "멀티테넌트 서비스의 간단한 메시징 서비스 구조")
 
-멀티테넌트 서비스의 간단한 메시징 서비스 구조
 
 멀티 테넌트는 하나의 데이터베이스를 여러명의 고객들에게 제공하는 것을 말한다. 가장 쉽게 멀티 테넌트 서비스를 구현하는 방법은 매뉴얼하게 샤딩해서 제공하는 것이다. 조금 더 어렵게 구현한다면 모든 테이블에 Tenant-ID 라는 고객을 구분할 수 있는 컬럼을 추가해서 같은 데이터베이스에서 구분하는 것이다. 이런 방식을 이용해서 구현하려면 아래 같은 기능을 제공해야 한다.
 
@@ -139,9 +136,8 @@ PostgreSQL은 파서 빼고는 모든 것이 모듈식 구조로 구성되어 �
 
 ### 시투스 아키텍처
 
-![](/img/medium/1-SUufJ53yT71SWUeDNh21cg-17a807f624cd.png)
+![](/img/medium/1-SUufJ53yT71SWUeDNh21cg-17a807f624cd.png "시투스 데이터베이스의 구성을 보여준다.")
 
-시투스 데이터베이스의 구성을 보여준다.
 
 위 그림은 기본적인 시투스 아키텍처를 나타낸다. 아키텍처는, 하나의 <strong>`코디네이터(Coordinator)`</strong>와 다수의 <strong>`워커 노드(Worker-node)`</strong>가 존재한다. 시투스를 처음 설치할 때 서버 하나를 추가하면 자동으로 코디네이터가 된다.
 
@@ -194,9 +190,8 @@ SELECT create_reference_table ('dimensions');
 - Route planner
 - Logical planner
 
-![](/img/medium/1--wayM2pq1OnX19m-qtWGwg-a027ec9a23b9.png)
+![](/img/medium/1--wayM2pq1OnX19m-qtWGwg-a027ec9a23b9.png "쿼리 특징에 따라 실제로 동작하는 방식을 4가지로 구분한 그림")
 
-쿼리 특징에 따라 실제로 동작하는 방식을 4가지로 구분한 그림
 
 - <strong>(A) Fast path planner</strong>
   분산 키로 데이터가 분산되기 때문에 어느 노드의 몇 번 샤드에 저장된 데이터를이미 알고 있다. 그래서 바로 해당 워커 노드로 요청을 보낸다.
@@ -211,9 +206,8 @@ SELECT create_reference_table ('dimensions');
 
 ### 분산 쿼리 실행
 
-![](/img/medium/1-m2VwoC_TYddbglBDriOLLA-16363575c4f4.png)
+![](/img/medium/1-m2VwoC_TYddbglBDriOLLA-16363575c4f4.png "CustomScan은 Adpative Executor라는 서브 플랜을 생성해서 분산 쿼리를 날린다.")
 
-CustomScan은 Adpative Executor라는 서브 플랜을 생성해서 분산 쿼리를 날린다.
 
 만약, Logical Pushdown Planner 처럼 여러 워커노드에 걸쳐서 쿼리 요청을 보내고 데이터를 받아야 하는 경우에는 Adaptive Executor라는 서브 플랜을 만든다. 논문에서는 Adaptive Executor의 성능을 높이기 위해 <strong>`slow start`</strong> 라는 알고리즘을 좀 더 소개하는데 여기서는 커넥션을 관리하는 알고리즘이라고만 말하고 스킵하겠다.
 
@@ -226,9 +220,8 @@ CustomScan은 Adpative Executor라는 서브 플랜을 생성해서 분산 쿼�
 - <strong>Single Transaction :</strong> 만약 트랜잭션을 처리하는 주체가 워커 노드 한대라면 일반 트랜잭션처럼 처리하면 될 것이다.
 - <strong>2PC(Two-phase Commit) :</strong> 시투스 분산트랜잭션은 2PC를 이용한다.
 
-![](/img/medium/1-U0ICkVw0vBH7YAub62Xj7w-2e20975d904d.png)
+![](/img/medium/1-U0ICkVw0vBH7YAub62Xj7w-2e20975d904d.png "시투스 분산 트랜잭션은 2PC를 이용한다.")
 
-시투스 분산 트랜잭션은 2PC를 이용한다.
 
 2PC는 단순히 코디네이터가 모든 워커 노드로 요청을 보내고 투표를 받아서 처리하고, 그 결과를 커밋하는 방식을 말한다. <strong>데이터 중심 애플리케이션 설계</strong> 라는 책에서는 2PC를 결혼식에서 주례사가 신랑 신부에게 이 결혼을 동의하냐는 질문을 하고 응답을 받으면 결혼이 성사되었다고 말하는 과정에 비유한다.
 
@@ -243,9 +236,8 @@ CustomScan은 Adpative Executor라는 서브 플랜을 생성해서 분산 쿼�
 
 교착상태(dead-lock)은 서로가 서로에게 필요한 자원을 달라고 하는 상황을 말한다. 시투스 처럼 분산 시스템에서는 재수 없으면 아래와 같이 분산된 형태의 교착 상태가 발생할 수 있다고 한다.
 
-![](/img/medium/1-k2tP0ZqKgKqiLj785LVGUg-b2afc56d9ffb.png)
+![](/img/medium/1-k2tP0ZqKgKqiLj785LVGUg-b2afc56d9ffb.png "분산 교착 상태의 예시")
 
-분산 교착 상태의 예시
 
 트랜잭션을 계속 날리다가 분산 교착상태가 발생한다면 연결된 트랜잭션 중 하나를 취소(Abort) 시켜야 한다. Google의 Spanner나 Cockroach DB는 wound-wait 라는 알고리즘을 사용한다고는 하는데 시투스는 단순한 방법을 선택한다.
 
@@ -294,9 +286,8 @@ CustomScan은 Adpative Executor라는 서브 플랜을 생성해서 분산 쿼�
 - HammerDB 3.3을 이용해서 500개의 데이터 하우스(100GB)와 250개의 가상 유저(connection)을 설정함
 - 1ms 마다 트랜잭션이 날아가고 1시간 동안 수행된다.
 
-![](/img/medium/1--Hbr17K9n00rjMWfL1nh4Q-db1ec137492d.png)
+![](/img/medium/1--Hbr17K9n00rjMWfL1nh4Q-db1ec137492d.png "멀티 테넌트 서비스의 성능")
 
-멀티 테넌트 서비스의 성능
 
 시투스를 1대만 이용할 경우는 PostgreSQL 1대를 이용하는 경우보다는 무조건 느리다. 쿼리 플랜이 더 추가되었기 때문에 오버헤드가 있기 때문이다. 그렇지만 클러스터에 워커 노드를 4대만 추가해도 1대의 경우보다 13배의 성능 향상이 있었다고 한다. 물론 그 이후부터는 8개로 노드를 늘려도 sub-linear 하게 증가했다고 한다.
 
@@ -315,9 +306,8 @@ COMMIT TRANSACTION;
 
 위 쿼리에서 key1, key2를 랜덤으로 생성해보면서 트랜잭션을 날려보면서 성능을 측정했다고 한다. 아래 그림에서 Same Key는 키가 동일해서 하나의 워커 노드에서 처리가 가능한 트랜잭션이다. 키가 다른 경우에는 분산 트랜잭션으로 실행되는 경우가 된다. 실험 결과 분산 트랜잭션이 약 20~30% 정도 느리다고 한다.
 
-![](/img/medium/1-udGgcWnazKNaOsAsSU4hsw-6d130ce9aab9.png)
+![](/img/medium/1-udGgcWnazKNaOsAsSU4hsw-6d130ce9aab9.png "분산 트랜잭션의 성능")
 
-분산 트랜잭션의 성능
 
 ## 주요 포인트는, 그래도 노드를 늘리면 스케일 아웃은 된다는 점이다.
 
@@ -325,17 +315,15 @@ COMMIT TRANSACTION;
 
 깃허브에서 공개한 데이터를 기준으로 실험했다고 한다. 단순하게 말해서 시투스가 성능이 좋았다고 한다.
 
-![](/img/medium/1-69TgqpWfV_kmKfEb2mVzvg-eab4faf22cb1.png)
+![](/img/medium/1-69TgqpWfV_kmKfEb2mVzvg-eab4faf22cb1.png "깃허브 데이터를 이용한 실시간 분석 성능")
 
-깃허브 데이터를 이용한 실시간 분석 성능
 
 ## ④ 대규모 CRUD 측정
 
 YCSB 데이터 측정 도구를 이용해서 미리 1억 건의데이터를 저장하고, 1시간 동안 256개의 스레드로 절반의 쓰기 요청과 절반의 읽기 요청을 보내면서 측정했다.
 
-![](/img/medium/1-WKVxtsKCcNnFdKxISUZkeQ-1fb011a77249.png)
+![](/img/medium/1-WKVxtsKCcNnFdKxISUZkeQ-1fb011a77249.png "대규모 CRUD 측정 결과")
 
-대규모 CRUD 측정 결과
 
 특히 CRUD 같은 경우는 하나의 워커 노드에 위임하는 비율이 높을 것이라서 성능 체감이 잘될 것 같다. 분산 트랜잭션을 쓰는 경우라면 그렇게 드라마틱한 성능 향상은 기대하지 못할 수도 있다. 그리고 CRUD처럼 단순한 요청이 아니라 비즈니스가 조금 복잡한데 강력한 일관성 모델이 필요한 경우라면 시투스를 쓰기 어려울 수도 있다. [그래서 토스의 코어 뱅킹 서버도 데이터베이스 1대로 이루어져 있다고 한다.](https://www.youtube.com/watch?v=v9rcKpUZw4o)
 

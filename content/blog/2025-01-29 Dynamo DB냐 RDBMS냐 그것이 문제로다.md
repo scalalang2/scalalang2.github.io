@@ -28,9 +28,8 @@ tags: []
 
 Reddit 에서 <strong>DynamoDB/RDBMS 논쟁[3]</strong>을 보던중에 누군가 엔지니어에게 허락된 정답은 <strong>“it depends”</strong> 뿐이라고 남겼습니다. 소프트웨어 아키텍처에서 많은 부분이 트레이드-오프가 존재한다지만, 의사결정에 있어 모든 반론을 받아들인다면 제대로 된 결정을 할 수 없고 미완성의 바다에 장기간 표류하는 저주에 걸릴 겁니다.
 
-![](/img/medium/1-VrBb2hAOqbuhC5xDhGp0Nw-c7a486e3e7ed.png)
+![](/img/medium/1-VrBb2hAOqbuhC5xDhGp0Nw-c7a486e3e7ed.png "[지. 지구의 운동에 대하여](https://page.kakao.com/content/60800785), [넷플릭스 상영중](https://www.netflix.com/title/81765022)")
 
-[지. 지구의 운동에 대하여](https://page.kakao.com/content/60800785), [넷플릭스 상영중](https://www.netflix.com/title/81765022)
 
 프로그래밍 언어, 디자인 패턴 등은 중요하지만, 절대적인 비교우위를 따지기는 어렵습니다. 객체지향 또는 함수형 패러다임의 언어 중 어느 것을 선택하더라도 그 자체로 잘못된 결정이라고 할 수 없습니다. 이러한 논쟁은 종종 개인의 선호도나 경험에 기반한 주관적인 감정 표현으로 귀결되곤 합니다.
 
@@ -44,9 +43,8 @@ Reddit 에서 <strong>DynamoDB/RDBMS 논쟁[3]</strong>을 보던중에 누군�
 
 ChatGPT에게 RDBMS와 키-밸류 데이터베이스의 차이에 대해 질문하면 성능및 확장성 관점에서 <strong>RDBMS는 수직 확장이 일반적이며 키-밸류 DB는 수평적 확장이 쉽고 빠른 읽기/쓰기에 적합하다고 합니다</strong>. 정보의 바다에서 인류 대다수의 지식을 종합해서 이야기하는 ChatGPT의 특성상 이것이 일반적인 견해라고 해석할 수 있습니다.
 
-![](/img/medium/1-I0QyRzt0P4WbhQTdqIi-eQ-43dee0dd7ac8.png)
+![](/img/medium/1-I0QyRzt0P4WbhQTdqIi-eQ-43dee0dd7ac8.png "ChatGPT : RDBMS와 키-밸류 데이터베이스의 차이점이 뭐야?")
 
-ChatGPT : RDBMS와 키-밸류 데이터베이스의 차이점이 뭐야?
 
 AWS를 이용하고 있다면 ChatGPT의 이 답변이 최근까지는 사실에 가까웠을지도 모릅니다. AWS RDS는 기본적으로 샤딩을 지원하지 않기 때문에 <strong>애플리케이션 레벨</strong>에서 샤딩을 직접 구현하는 경우가 많았습니다[6][7][8]. (AWS Aurora Serverless도 수직 확장만 지원합니다)
 
@@ -63,9 +61,8 @@ Aurora의 장점은 필요에 따라 ACU를 유연하게 조절할 수 있다는
 
 ## ② Aurora Limitless Database
 
-![](/img/medium/1-K-wYkRq7rT5NUjmHFlBIlg-cf53ea75483a.png)
+![](/img/medium/1-K-wYkRq7rT5NUjmHFlBIlg-cf53ea75483a.png "source : [Amazon Aurora PostgreSQL Limitless Database is now generally available](https://aws.amazon.com/blogs/aws/amazon-aurora-postgresql-limitless-database-is-now-generally-available/)")
 
-source : [Amazon Aurora PostgreSQL Limitless Database is now generally available](https://aws.amazon.com/blogs/aws/amazon-aurora-postgresql-limitless-database-is-now-generally-available/)
 
 Aurora Limitless Database는 처음부터 샤딩을 통한 수평 확장이 가능한 데이터베이스를 목표로 개발되었습니다. Limitless Database를 생성하면 단일 엔드포인트가 노출되어 사용자가 편리하게 데이터베이스를 이용할 수 있습니다. Limitless Database는 하나의 샤드 그룹으로 구성되어 있고 샤드 그룹은 2개의 계층으로 이루어져 있습니다.
 
@@ -98,9 +95,8 @@ JSON 문서는 지역성(locality)이 높아서 상대적인 성능 이점이 �
 
 > 게임의 경우 플레이어 본인의 정보를 조회하고, 본인의 정보만을 수정하는 요청이 빈번한 경우에는 JSON 형식의 저장방식이 코드의 간결함을 유지하는데 도움이 될 수 있습니다. 아래는 제가 즐겨하는 게임 중 하나인 젠레스 존 제로의 인벤토리 모습입니다. 800개가 넘는 아이템을 한 번에 조회해야 하기 때문에 이 경우에는 문서 자체를 저장하는게 좋을 수 있습니다.
 
-![](/img/medium/1-eKTRhR5leBkYLlKuZv1UlQ-00ed480f996c.png)
+![](/img/medium/1-eKTRhR5leBkYLlKuZv1UlQ-00ed480f996c.png "본인의 비틱 디스크 후후")
 
-본인의 비틱 디스크 후후
 
 Vitess, CockroachDB 그리고 Limitless Database가 수평 확장을 지원하긴 하지만 일각에서는 이 사실에 비판적인 시각이 있습니다. Apache Cassandra의 핵심 개발자 중 한명인 Jonathan Ellis는 2009년에 다음 발표[17]에서 관계형 데이터베이스는 수평 확장이 불가능 하다고 주장합니다
 
@@ -111,9 +107,8 @@ Vitess, CockroachDB 그리고 Limitless Database가 수평 확장을 지원하�
 
 위의 주장이 어떤 뜻으로 쓰인 건지는 정확히 알 수 없지만, 제가 알고 있는 지식에 기대어 생각해보면 다음과 같이 상상해볼 수 있습니다. 샤딩으로 수평 확장된 데이터베이스에서 데이터가 여러 샤드로 나뉘어져 있으면 트랜잭션은 여러 샤드에 걸쳐 <strong>2단계 커밋 프로토콜(2PC)</strong>을 수행해야 ACID 속성을 만족시킬 수 있습니다.
 
-![](/img/medium/1-iYUNQW8F-uAKn2nHxQBxcg-35c86b88cf31.png)
+![](/img/medium/1-iYUNQW8F-uAKn2nHxQBxcg-35c86b88cf31.png "[출처 : 데이터 중심 애플리케이션 설계](https://ebrary.net/64872/computer_science/introduction_phase_commit#google_vignette)")
 
-[출처 : 데이터 중심 애플리케이션 설계](https://ebrary.net/64872/computer_science/introduction_phase_commit#google_vignette)
 
 2단계 커밋 프로토콜은 그 특성상 많이 사용할수록 성능과 처리량이 저하될 수밖에 없습니다. MySQL 분산 데이터베이스인 Vitess는 초기 모델에서 분산 트랜잭션을 지원하지 않았습니다[[18]](https://vitess.io/blog/2016-06-07-distributed-transactions-in-vitess/). 그래서 중간에 한 노드에서 중단이 발생하면 데이터 불일치가 발생합니다. 현재 Vitess는 2단계 커밋 프로토콜을 실험 버전으로 제공하고 있지만, 프로덕션 환경에서는 주의해서 사용하라는 경고 문구가 있으며 가능한 한 사용을 자제하도록 권고하고 있습니다[19].
 
@@ -123,9 +118,8 @@ Vitess, CockroachDB 그리고 Limitless Database가 수평 확장을 지원하�
 
 복제란 데이터를 네트워크에 연결된 여러 노드에 분산해서 복사본을 유지하는 매커니즘입니다. 데이터베이스에서는 고가용성을 높이거나 읽기 연산의 처리량을 높이거나 지리적으로 사용자에 가깝게 복제해서 지연시간을 줄이는데 이용합니다. 데이터를 복제하는데에는 크게 동기식 복제, 비동기 복제, 정족수 복제와 합의를 이용한 상태복제머신이 있습니다.
 
-![](/img/medium/1--NfBPOS-y493q9s1Cpa47A-966781b448bd.png)
+![](/img/medium/1--NfBPOS-y493q9s1Cpa47A-966781b448bd.png "(좌) 비동기 복제 / (우) 동기 복제")
 
-(좌) 비동기 복제 / (우) 동기 복제
 
 가장 기본적인 RDBMS를 사용한다면 보통 쓰기 인스턴스 한 대와 여러개의 복제 인스턴스(read replica)를 구성하게 됩니다. 쓰기 인스턴스(리더)에 발생한 요청은 연결된 읽기 인스턴스(팔로워)로 로그를 복제해서 복사본을 구성하는데요. 이를 리더- 팔로워 모델이라고 합니다.
 
@@ -136,9 +130,8 @@ Vitess, CockroachDB 그리고 Limitless Database가 수평 확장을 지원하�
 ### 정족수 복제(Quorum Replication)
 Aurora DB에서는 스토리지 레이어와 연산 레이어가 분리되어 있습니다. 그리고 스토리지 레이어는 최대 6대 중에 4대에 복제가 완료되어야 트랜잭션이 커밋됩니다. 정족수 복제는 이론적으로는 W+R ≥ N을 만족한다고 하더라도 일부 엣지케이스가 있다고 알려져 있습니다만, Aurora의 논문에 따르면 Aurora 스토리지 노드의 독특한 구조 때문에 합의까지는 필요 없다고 언급되어 있습니다.
 
-![](/img/medium/1-TRsggfT-94_J4th9_rFJhA-af022f0d3f94.png)
+![](/img/medium/1-TRsggfT-94_J4th9_rFJhA-af022f0d3f94.png "[Amazon Aurora: Design Considerations for High Throughput Cloud-Native Relational Database](https://pages.cs.wisc.edu/~yxy/cs764-f20/papers/aurora-sigmod-17.pdf)")
 
-[Amazon Aurora: Design Considerations for High Throughput Cloud-Native Relational Database](https://pages.cs.wisc.edu/~yxy/cs764-f20/papers/aurora-sigmod-17.pdf)
 
 ### 합의 알고리즘 (Consensus Algorithm)
 합의 알고리즘은 높은 수준의 일관성과 내결함성을 제공하는 알고리즘입니다. 이러한 특성 때문에 쿠버네티스의 etcd, 아파치 카프카의 주키퍼 등 많은 분산 시스템의 컨트롤 플레인에서 활용되고 있습니다. 과거엔 Paxos 알고리즘이 주로 사용되었지만, 최근에는 Raft 알고리즘이 더 널리 채택되는 추세입니다.
@@ -176,9 +169,8 @@ DynamoDB에서 파티셔닝은 테이블의 처리량(throughput)에 의해 결�
 
 > AWS RDS처럼 인스턴스를 임대하는 방식이 아닌 아마존이 거대한 키-밸류 DB를 운영하고 있고 멀티-테넌트 방식으로 우리에게 서비스를 제공하는 것이다 보니까 가능한거겠죠?
 
-![](/img/medium/1-83pOJA_GnaFr89hH6xXujw-0c291c5fdb12.png)
+![](/img/medium/1-83pOJA_GnaFr89hH6xXujw-0c291c5fdb12.png "그림 출처 : [DynamoDB의 시스템 디자인과 분산 트랜잭션 구현 원리](https://medium.com/rate-labs/%EC%95%84-%ED%95%B4%EB%B4%90-dynamodb-%EB%93%A4%EC%96%B4%EA%B0%84%EB%8B%A4-f8da282bc625)")
 
-그림 출처 : [DynamoDB의 시스템 디자인과 분산 트랜잭션 구현 원리](https://medium.com/rate-labs/%EC%95%84-%ED%95%B4%EB%B4%90-dynamodb-%EB%93%A4%EC%96%B4%EA%B0%84%EB%8B%A4-f8da282bc625)
 
 ### ① 파티션 리밸런싱
 데이터베이스를 운영하면 하루에도 몇 번씩 상황이 변합니다. 특정 파티션에 쿼리 요청량이 증가하면 이 부하를 다른 노드로 분배할 필요가 있고, 장애가 발생하면 해당 노드가 담당하던 역할을 다른 노드가 이어 받아야 합니다. 이 경우 클러스터에서 한 노드에서 담당하던 부하를 다른 곳으로 옮기는 과정을 <strong>리밸런싱(rebalancing), </strong>리샤딩(resharding)이라고 합니다.
@@ -194,9 +186,8 @@ DynamoDB는 완전 관리형 키-밸류 데이터베이스로 개발자가 신�
 
 리밸런싱은 요청 경로를 재설정해야 하고 대량의 데이터가 노드 사이를 이동해야 하기 때문에 비용이 매우 큰 연산입니다. 운영중에 처리하면 네트워크나 노드에 부하가 발생하게 되고 다른 유저의 요청 성능이 저하 될 수 있습니다. 카카오페이 에서는 샤딩이 얼마나 어려운 작업인지 회고하기도 했습니다.
 
-![](/img/medium/1-KwvD9JFo7NcdSaqpBvlD7Q-959cecb4a640.png)
+![](/img/medium/1-KwvD9JFo7NcdSaqpBvlD7Q-959cecb4a640.png "[카카오페이 : AWS re:Invent 2023, 관심 세션을 중심으로 (1편): Aurora DB, Amplify](https://tech.kakaopay.com/post/2023-aws-reinvent-1/)")
 
-[카카오페이 : AWS re:Invent 2023, 관심 세션을 중심으로 (1편): Aurora DB, Amplify](https://tech.kakaopay.com/post/2023-aws-reinvent-1/)
 
 > 리밸런싱과 자동 장애 감지가 조합되면 예상치못한 사이드-이펙트가 있을 수 있습니다. 예를 들어 리밸런싱 과정에서 특정 노드에 부하가 생겼다면 장애 감지 시스템이 새로운 노드로 교체하려고 할 수 있습니다.
 
@@ -222,9 +213,8 @@ ERROR: Shard key column update is not supported
 
 > 이 논리대로라면 유튜브는 자신이 쓴 댓글 리스트를 조회하는 기능이 없겠다라고 추론할 수 있습니다. 실제로 유튜브 내에서는 내 댓글 조회 기능이 없고 Google 활동이라는 별도 페이지가 존재했습니다. 유튜브 내에서 댓글을 작성하면 약 10~20초 뒤에 Google 활동 페이지에 노출됩니다. 즉, 이벤트를 수신바당서 2차 DB를 구성한 것으로 보입니다.
 
-![](/img/medium/1-U6WzJLnl0TKtdwe_oFAPEg-0fc49d2b3a24.png)
+![](/img/medium/1-U6WzJLnl0TKtdwe_oFAPEg-0fc49d2b3a24.png "Google 내 활동 페이지에 있는 나의 댓글 목록 조회 기능")
 
-Google 내 활동 페이지에 있는 나의 댓글 목록 조회 기능
 
 ### ❸ Read Replica 미지원
 Aurora Limitless Database는 라우터 계층이 쿼리를 받아서 처리하는데요. 그래서 Read Replica란 개념이 없습니다. 당장 공개된 정보가 부족해서 읽기 전용 복제본을 사용할 수 없어서 읽기 전용 워크로드를 처리할 수 없는 건지는 확신하긴 어렵지만 맥락을 보면 당장은 쓰기 전용 워크로드가 높은 애플리케이션에만 적합해 보입니다.

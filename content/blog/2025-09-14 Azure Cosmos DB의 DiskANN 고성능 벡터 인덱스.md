@@ -40,17 +40,15 @@ OpenAI는 대조학습을 활용한 CLIP 모델에서 멀티-모달 데이터를
 [<strong>Curse of dimensionality</strong>\
 medium.com](https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f "https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f")[](https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f)
 
-![](/img/medium/1-wnNOrIlevLCpg2ViSqh5PQ-338c3cf746d4.png)
+![](/img/medium/1-wnNOrIlevLCpg2ViSqh5PQ-338c3cf746d4.png "출처 : [https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f](https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f)")
 
-출처 : [https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f](https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f)
 
 차원이 증가할 수록 희소한 공간이 많아지기 때문에 상대적인 거리라는 값이 의미를 잃어버리게 됩니다. 저는 이를 직관적으로 이해하기 위해서 흔히 다음과 같은 예시를 드는데요. 철수와 민수를 구분하는 데이터를 <strong>성별</strong> 하나만 사용해서 벡터를 만들면 이 둘 사이의 거리는 0입니다.
 
 여기서 MBTI, 직업, 거주지 등 다양한 변수를 추가할 때 마다 서로가 구별되기 때문에 벡터 거리상으로는 계속 멀어지게 되는데요. 유클리드 거리 수식을 보면 차원의 수가 증가할 수록 값은 벡터의 거리가 1로 수렴하게 됩니다.
 
-![](/img/medium/1-As9ZXy_DVIBAIGNm8mrzOw-6f8d1e092a5e.png)
+![](/img/medium/1-As9ZXy_DVIBAIGNm8mrzOw-6f8d1e092a5e.png "유클리드 거리 계산")
 
-유클리드 거리 계산
 
 따라서 가장 가까운 벡터를 찾는 건 사실상 불가능에 가깝고, 가장 인접할 가능성이 높은 k 개의 이웃을 찾는 것을 목표로 합니다. 이를 좀 더 formal하게 정의하면, 쿼리와 알고리즘의 결과값 X가 k개의 최근접 이웃 후보를 가지고 있고 ground-truth를 G라고 할 때, k- @ recall k는 다음과 같이 정의됩니다
 
@@ -61,15 +59,13 @@ medium.com](https://medium.com/geekculture/curse-of-dimensionality-e97ba916cb8f 
 
 IVF를 수행하려면 먼저 파티션 개수인 파라미터와 탐색할 파티션의 개수인 nlist와 nprobe를 결정한 다음 K-평균 클러스터링, LSH 등을 활용해서 군집화를 수행해서 nlist로 결정한 개수만큼 중심점을 추출합니다. RDBMS에서 인덱스를 생성할 때는 데이터가 없어도 인덱스부터 만들 수 있었는데요, 벡터 인덱스에서는 클러스터링관련 알고리즘을 활용하기 때문에 데이터 부터 모은다음 인덱스를 생성해야합니다.
 
-![](/img/medium/1-k1ZiwL1oR2oi2lhnSuI1sQ-fb8b4e64b269.png)
+![](/img/medium/1-k1ZiwL1oR2oi2lhnSuI1sQ-fb8b4e64b269.png "[Voronoi diagram — Wikipedia](https://en.wikipedia.org/wiki/Voronoi_diagram)")
 
-[Voronoi diagram — Wikipedia](https://en.wikipedia.org/wiki/Voronoi_diagram)
 
 이렇게 얻어진 중심점들을 기준으로 공간이 분할되면, 각 벡터는 가장 가까운 중심점에 대응되는 파티션에 할당됩니다. 한번 파티션이 나워진 뒤 검색을 수행할 때는 주어진 쿼리 벡터와 가장 가까운 중심점(또는 여러 개의 중심점, nprobe에 따라 다름)을 찾은 후 해당 파티션들 안에서 후보 벡터와의 거리를 비교하여 가장 가까운 벡터를 찾습니다.
 
-![](/img/medium/1-CEIA8y4go7woDyZCCWoelw-44edb67d06df.png)
+![](/img/medium/1-CEIA8y4go7woDyZCCWoelw-44edb67d06df.png "[NVIDIA : Accelerated Vector Search: Approximating with NVIDIA cuVS Inverted Index](https://developer.nvidia.com/blog/accelerated-vector-search-approximating-with-nvidia-cuvs-ivf-flat/)")
 
-[NVIDIA : Accelerated Vector Search: Approximating with NVIDIA cuVS Inverted Index](https://developer.nvidia.com/blog/accelerated-vector-search-approximating-with-nvidia-cuvs-ivf-flat/)
 
 파티션의 개수를 k개로 하고 전체 데이터 수를 N이라 할 때, IVF 인덱스의 탐색 시간 복잡도는 O(k + N/k)가 됩니다. 탐색하는 파티션이 많을수록 검색 속도는 느려지지만 정확도(recall)는 증가합니다.
 
@@ -92,9 +88,8 @@ Vamana로 바로 들어가기 전에 선행 지식으로 필요한 GreedySearch�
 ### ① GreedySearch 알고리즘
 DiskANN을 포함한 NSW, HNSW는 벡터들을 그래프로 구축하고 GreedySearch라는 탐색 알고리즘을 활용합니다. 그래프에서 정점은 하나의 벡터를 의미하고 간선은 벡터와 벡터 사이의 거리를 말합니다. 거리는 코사인 유사도와 유클리드 거리 등을 활용할 수 있습니다. 일단 논문에서는 유클리드 거리를 사용했습니다.
 
-![](/img/medium/1-SzcIHkCKhC9Hfk7TO7tfvQ-207b7918d64e.png)
+![](/img/medium/1-SzcIHkCKhC9Hfk7TO7tfvQ-207b7918d64e.png "DiskANN / GreedySearch 알고리즘")
 
-DiskANN / GreedySearch 알고리즘
 
 GreedySearch의 함수에 4개의 매개변수가 존재하는데요. s는 시작 정점을 의미하며 아무거나 선택해도 상관없습니다. x_q는 우리가 찾고자하는 쿼리벡터를 의미합니다. 예를 들어, 검색어로 “<strong>가벼운데 가성비 있는 노트북</strong>”을 입력한 경우 이를 임베딩 해서 변환한 벡터가 쿼리벡터가 되고 이것과 가장 가까운 정점들 k개가 우리가 찾고자 하는 결과값입니다.
 
@@ -102,9 +97,8 @@ GreedySearch의 함수에 4개의 매개변수가 존재하는데요. s는 시�
 
 알고리즘은 아직 방문하지 않은 정점 집합 ($L \setminus V$) 중에서 쿼리 벡터와 가장 가까운 벡터 ($p^* = \operatorname{argmin}(\lVert p - q \rVert)$) 를 찾고 $p^*$ 벡터의 이웃을 다시 탐색 공간에 추가하면서 더 이상 가까운 이웃이 나타나지 않을때까지 반복합니다.
 
-![](/img/medium/1-SlVMQCnhYcm59lQ6DHN2NQ-8c2e4d7c06e6.png)
+![](/img/medium/1-SlVMQCnhYcm59lQ6DHN2NQ-8c2e4d7c06e6.png "Azure Cosmos DB 논문에서 인용한 L과 Recall간의 관계")
 
-Azure Cosmos DB 논문에서 인용한 L과 Recall간의 관계
 
 위 그림은 천만개의 벡터를 저장했을 때 L을 변경해가면서 정확도(Recall)와 레이턴시 그리고 컴퓨팅 사용량(Request Units)의 변화량을 보여줍니다. L=50세팅에서는 p99에서 20ms에 가까운 레이턴시로 서비스를 제공하지만 L을 높이면 레이턴시와 정확도가 같이 증가합니다.
 
@@ -126,16 +120,14 @@ Greedy Search 알고리즘이 잘 수렴하기 위한 충분 조건으로 <stron
 
 이를 보완하기 위해 DiskANN에서는 간선 제거에 대한 임계값 α를 사용한 RobustPrune 알고리즘을 사용합니다. 매개변수는 총 4개가 등장합니다. p는 간선을 추가할 정점을 의미하고 V는 후보군을 의미합니다. α은 임계값을 의미하며 R은 간선의 최대 갯수입니다.
 
-![](/img/medium/1-vu0F42igUX1MKSpzC2Jc8Q-f8ac6fe315b9.png)
+![](/img/medium/1-vu0F42igUX1MKSpzC2Jc8Q-f8ac6fe315b9.png "RobustPrune 알고리즘")
 
-RobustPrune 알고리즘
 
 ### ③ Vamana
 마지막으로 Vamana 알고리즘은 그래프 구축 알고리즘입니다. 나이브한 방법을 사용하면 그래프 구축의 시간 복잡도가 O(N²)이기 때문에 Vamana 알고리즘에서는 RobustPrune을 정점 일부를 샘플링 해서 간선을 구축합니다. 아래 노테이션 중에 medoid는 그래프 내에서 다른 모든 정점과의 거리 합이 가장 작은 정점을 의미하는데요. 꼭 정확한 값을 구할 필요는 없어 보이고 적당히 휴리스틱하게 구해서 써도 될 것 같습니다.
 
-![](/img/medium/1-2ffbW1yi7rh_ZcDjx2MN8A-3144002f7e49.png)
+![](/img/medium/1-2ffbW1yi7rh_ZcDjx2MN8A-3144002f7e49.png "Vamana Indexing Algorithm")
 
-Vamana Indexing Algorithm
 
 일단 내가 가지고 있는 데이터 셋에서 랜덤그래프 G를 만듭니다. 즉, 앞서 말했듯이 데이터 셋을 충분히 가지고 있는 상황에서 수행해야 합니다. 그리고 랜덤한 정점 i에 대해서 GreedySearch를 수행한 뒤 방문한 노드에 대해 RobustPrune을 수행합니다.
 
@@ -162,17 +154,15 @@ Azure Cosmos DB에서 벡터 인덱싱은 기존에 존재하던 B+ Tree에 Disk
 
 Azure Cosmos DB[4]는 완전 관리형, 글로벌로 분산된, 멀티 모델 데이터베이스 서비스입니다. 여기서 멀티<strong>-</strong>모델 이란 의미는 키-밸류, 문서, 그래프, 관계형 등 다양한 형태의 정보를 단일 인터페이스로 다룰 수 있게 통합했다는 의미인데요. 실제로는 DB마다 사용법은 조금씩 다르지만 서버리스, 글로벌 복제, 확장성, 파티션 분할 등의 특징은 공통적으로 가집니다
 
-![](/img/medium/1-Nu08tTv-6eOKXWi-mYn5eg-cef9e6acc27b.png)
+![](/img/medium/1-Nu08tTv-6eOKXWi-mYn5eg-cef9e6acc27b.png "[https://azure.microsoft.com/en-us/blog/azure-cosmos-db-database-for-intelligent-cloud-intelligent-edge-era/](https://azure.microsoft.com/en-us/blog/azure-cosmos-db-database-for-intelligent-cloud-intelligent-edge-era/)")
 
-[https://azure.microsoft.com/en-us/blog/azure-cosmos-db-database-for-intelligent-cloud-intelligent-edge-era/](https://azure.microsoft.com/en-us/blog/azure-cosmos-db-database-for-intelligent-cloud-intelligent-edge-era/)
 
 Azure Cosmos DB는 서버리스 제품이기 때문에 사용자가 독립적인 머신을 빌리는 것이 아니라 멀티 테넌트 형태로 다른 이용자와 함께 서비스를 공유하게 됩니다.
 
 Cosmos DB는 다양한 데이터베이스 작업의 비용을 Request Unit(RU)라는 단위로 표준화하며, 처리량은 초당 Request Unit(RU/s) 기준으로 측정됩니다. Request Unit은 CPU, 메모리, IOPS 등 시스템 자원을 추상화한 일종의 통화 단위인데요. 따라서 사용자는 실제 머신 임대 비용이 아닌 자신이 사용한 RU 단위에 따라 비용을 지불하게 됩니다.
 
-![](/img/medium/1-7gD2NQhyq1K8Mvlve_0qNg-16b7ce2dd0c7.png)
+![](/img/medium/1-7gD2NQhyq1K8Mvlve_0qNg-16b7ce2dd0c7.png "[Request Units in Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/request-units)")
 
-[Request Units in Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/request-units)
 
 ### ① Schema Agnostic Indexing
 Azure Cosmos DB의 모든 데이터베이스가 벡터 인덱싱을 지원하는 건 아니고, Azure Cosmos DB for NoSQL에만 적용되어 있습니다. 이 DB는 JSON데이터만 사용해서 데이터를 저장, 색인, 쿼리 할 수 있습니다.

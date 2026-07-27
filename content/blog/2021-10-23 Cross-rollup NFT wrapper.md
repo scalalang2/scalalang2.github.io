@@ -23,9 +23,8 @@ tags: []
 
 2016년 9월 22일, 이더리움이 서비스 거부 공격을 당하는 일이 발생했다. 문제의 원인은 이더리움에서 스마트 컨트랙트를 실행할 때 LevelDB에 저장된 상태 값에 접근하는 OPCODE의 수수료가 실제 연산 시간에 비해 지나치게 저렴했기 때문이었다. 초기 이더리움은 평균 15초마다 하나의 블록이 생성되도록 설계했는데, 수수료가 저렴해서 15초에 처리할 수 없는 트랜잭션이 한 블록에 담긴 것이 문제가 됐다. 결국 이더리움은 EIP-150 하드포크를 통해 수수료를 대대적으로 인상하게된다.
 
-![](/img/medium/0-xf-_ZSuB5Q3QqglB-683ee69e71f6.png)
+![](/img/medium/0-xf-_ZSuB5Q3QqglB-683ee69e71f6.png "EIP-150 에서 변경된 수수료 정책 (단위 : GAS)")
 
-EIP-150 에서 변경된 수수료 정책 (단위 : GAS)
 
 그리고 또한 알게모르게 여러번의 하드포크를 통해 gas limit을 증가시켜서 블록당 트랜잭션 수용량을 늘렸다. 5.0M 블록의 gas limit이 8.0M인데 런던 하드포크에서 EIP-1559를 적용하면서 현재 gas limit을 약 30.M으로 3–4배 수준으로 증가시켰다.
 
@@ -43,15 +42,13 @@ EIP-150 에서 변경된 수수료 정책 (단위 : GAS)
 
 사건의 시작은 대 NFT 르네상스 시대가 오고 이더리움에서 NFT 관련 트랜잭션이 폭발적으로 증가하면서 발생했다. 안그래도 좁은 방에 계획에 없던 손님이 늘어나니 관리자 입장에서는 난처할 수 밖에 없었다. 아래 그래프는 Dune Analytics에서 제공하는 OpenSea 월간 거래액의 차트를 가져왔다. NFT에는 많은 플레이어가 있지만 OpenSea 단독으로 올해 8월 한달간 3.4조원의 거래액을 찍으며 전월대비 10배를 넘게 성장했다.
 
-![](/img/medium/1-pgBikPqb2C6egVZ6-OBlTg-9b323f7b2a7f.png)
+![](/img/medium/1-pgBikPqb2C6egVZ6-OBlTg-9b323f7b2a7f.png "Dune Analytics — OpenSea 월간 거래 볼륨")
 
-Dune Analytics — OpenSea 월간 거래 볼륨
 
 거래액이 증가했기 때문에 트랜잭션 또한 큰 폭으로 증가했다. 아래 차트를 보면 8월을 기점으로 일간 거래량이 크게 증가한 것을 볼 수 있다. 현재 이 글을 작성하는 시점에 OpenSea는 전체 이더리움 가스 소비량의 약 10%를 차지하여 유니스왑 다음으로 통행료 상승 원인이다.
 
-![](/img/medium/1-dfWPRbLKQ0JeDkep9yXEdQ-a8d1e3c03de7.png)
+![](/img/medium/1-dfWPRbLKQ0JeDkep9yXEdQ-a8d1e3c03de7.png "Dune Analytics — OpenSea의 일간 트랜잭션 발생 수")
 
-Dune Analytics — OpenSea의 일간 트랜잭션 발생 수
 
 ### 결론 — NFT를 L2(롤업)으로 이주시키자
 
@@ -101,9 +98,8 @@ Wrapped NFT는 우선 하나의 롤업 (혹은 메인체인)에 생성하면서 
 
 ![](/img/medium/0-mq7yokK-Zkm-q7Ql-999eaca50d09.png)
 
-![](/img/medium/0-S-io7_yzlPPauIeA-215e3a7b80c6.png)
+![](/img/medium/0-S-io7_yzlPPauIeA-215e3a7b80c6.png "출처 : ethresear.ch | cross-rollup NFT wrapper and migration ideas")
 
-출처 : ethresear.ch \| cross-rollup NFT wrapper and migration ideas
 
 ### ② Cross-rollup Transfer
 
@@ -111,9 +107,8 @@ Wrapped NFT는 우선 하나의 롤업 (혹은 메인체인)에 생성하면서 
 
 ![](/img/medium/0-xYG5hkt3ZKpn7c1-f9926347b75e.png)
 
-![](/img/medium/0-jbH5sX8Mfmqv3kla-54149b2546fb.png)
+![](/img/medium/0-jbH5sX8Mfmqv3kla-54149b2546fb.png "출처 : ethresear.ch | cross-rollup NFT wrapper and migration ideas")
 
-출처 : ethresear.ch \| cross-rollup NFT wrapper and migration ideas
 
 ### ③ Gas-optimized issuing on base chain
 

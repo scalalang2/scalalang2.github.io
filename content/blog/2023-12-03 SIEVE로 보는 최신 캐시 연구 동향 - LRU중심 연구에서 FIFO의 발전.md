@@ -63,21 +63,18 @@ tags: []
 
 그렇다면 왜 그동안 LRU가 캐시 연구분야에서 강세였는가? 이런 통념을 뒤집는다는 게 학술적으로 어떤 의미를 지니고 있는지 좀 더 피부로 느끼려면 [Belady’s Anomaly](https://en.wikipedia.org/wiki/B%C3%A9l%C3%A1dy%27s_anomaly)에 대해 이해하면 좋다. 다음 그림과 같은 요청이 시간 순서대로 들어온다고 생각해보자.
 
-![](/img/medium/1-JX8fJObUtUjlJBjuiri4iQ-0812724cc162.png)
+![](/img/medium/1-JX8fJObUtUjlJBjuiri4iQ-0812724cc162.png "캐시에 위 그림에 나타낸 요청이 순서대로 입력으로 주어진다")
 
-캐시에 위 그림에 나타낸 요청이 순서대로 입력으로 주어진다
 
 그리고 크기가 3인 FIFO 큐를 사용해서 들어오는 요청을 캐싱한다. 아래 그림에서 <strong>PF는 Page Fault</strong>를 나타내며 캐시 미스를 의미하고 X는 페이지 교체가 발생하지 않은 캐시 히트를 의미한다. 아래 그림을 보면 크기가 3인 FIFO 큐를 사용할 경우 캐시 히트가 3회 발생한다.
 
-![](/img/medium/1-cBSElk1gYFCeriQ8xvpRGA-751fea93a4a8.png)
+![](/img/medium/1-cBSElk1gYFCeriQ8xvpRGA-751fea93a4a8.png "[Ref. Geeks for Geeks — Belady’s Anomaly in Page Replacement Algorithms](https://www.geeksforgeeks.org/beladys-anomaly-in-page-replacement-algorithms/)")
 
-[Ref. Geeks for Geeks — Belady’s Anomaly in Page Replacement Algorithms](https://www.geeksforgeeks.org/beladys-anomaly-in-page-replacement-algorithms/)
 
 아 캐시 크기가 너무 작으니까 캐시 크기를 늘리면 캐시 히트가 증가하고 캐시 미스가 감소해야겠지? 라는 생각이 직관적이지만 캐시 크기를 3에서 4로 늘릴 경우 오히려 캐시 미스가 증가하는 현상이 나타나는데 이를 <strong>Belady‘s Anomaly</strong> 이라고 부른다.
 
-![](/img/medium/1-vHzGQxj6CmjL51cce-BT_Q-bf25bc0ae63a.png)
+![](/img/medium/1-vHzGQxj6CmjL51cce-BT_Q-bf25bc0ae63a.png "[Ref. Geeks for Geeks — Belady’s Anomaly in Page Replacement Algorithms](https://www.geeksforgeeks.org/beladys-anomaly-in-page-replacement-algorithms/)")
 
-[Ref. Geeks for Geeks — Belady’s Anomaly in Page Replacement Algorithms](https://www.geeksforgeeks.org/beladys-anomaly-in-page-replacement-algorithms/)
 
 <strong>Belady’s Anomaly</strong>은 이미 1980s 대에 정립된 이론이며 캐시에서 축출할 데이터를 선택할 때 우선순위를 고려하지 않아서 발생하는 것으로 알려진다. 그리고 이런 이상 현상은 LRU를 사용할 경우 확실히 발생하지 않아 캐시 미스가 감소한다. 이것을 그동안의 캐시 연구가 LRU를 최적화하는데 집중된 이론적 배경으로 설명할 수 있다.
 
@@ -93,23 +90,20 @@ tags: []
 
 캐시 축출 알고리즘인 LRU는 temporal locality성질에 의해 존재의 타당성을 얻었다면 저자는 FIFO 도입의 타당성을 입증하기 위해 원-히트-원더 (One-hit-wonder)라는 데이터의 새로운 성질을 사용했다. <strong>원-히트-원더</strong>란 요청 시퀀스에서 한 번만 등장하는 오브젝트의 비율을 말한다.
 
-![](/img/medium/1-ibtEJVH3Oc0EjcN5NqdZnw-693147fb85e7.png)
+![](/img/medium/1-ibtEJVH3Oc0EjcN5NqdZnw-693147fb85e7.png "S3-FIFO Queue | One-hit-wonder ratio")
 
-S3-FIFO Queue \| One-hit-wonder ratio
 
 위 그림을 보면 A부터 E까지 5개의 요청이 17초 동안 입력으로 주어진다. 시퀀스의 길이가 17인 경우 원-히트-원더는 ‘E’ 하나로 전체 객체 중 비율이 20%이지만 시퀀스 길이를 줄이수록 원-히트-원더 비율이 증가함을 보여준다.
 
-![](/img/medium/1-UIqHLqeHLpVnLvmHrzd83A-aef304a56060.png)
+![](/img/medium/1-UIqHLqeHLpVnLvmHrzd83A-aef304a56060.png "Zipf’s law , [Twitter](https://github.com/twitter/cache-trace) , [Microsoft Research](http://iotta.snia.org/traces/block-io/388) 의 데이터를 보여주는 라인그래프")
 
-Zipf’s law , [Twitter](https://github.com/twitter/cache-trace) , [Microsoft Research](http://iotta.snia.org/traces/block-io/388) 의 데이터를 보여주는 라인그래프
 
 웹 캐시 워크로드는 일반적으로 <strong>멱급수 법칙</strong>(Power-law \| generalized Zipfian)을 따른다고 알려져 있다. 위 그림에서 왼쪽 두 개의 그래프는 Zipf 분포를 나타내고 오른쪽 두개는 트위터와 마이크로소프트 리서치에서 공개한 데이터를 토대로 원-히트-원더의 비율을 계산한 것이다.
 
 그래프의 X축은 시퀀스가 포함하는 오브젝트의 비율을 나타낸 것이다. 그림 (d)를 보면 전체 오브젝트 중 10%를 포함하는 시퀀스에서 원-히트-원더 비율은 트위터의 경우 25%, MSR 데이터는 75%인 걸 알 수 있다. 트위터의 경우 Zipf 그래프를 추종한다기엔 너무 낮은 걸 알 수 있는데 소셜 네트워크 데이터가 일반적으로 좀 더 세게 왜곡(skew)되어 있다고 한다. <strong>이 데이터는 우리에게 캐시 크기를 전체의 10%로 책정 한다면 72%~78% 정도의 객체는 두 번 이상 쓰이지 않기 때문에 공간만 차지한다는 것을 알려준다.</strong>
 
-![](/img/medium/1-do0zyEBKvIvWfP4LAMLCUA-b70738beab0e.png)
+![](/img/medium/1-do0zyEBKvIvWfP4LAMLCUA-b70738beab0e.png "LRU 캐시 정책을 적용해서 객체를 축출할 당시의 freq 값이 몇인지 보여준다")
 
-LRU 캐시 정책을 적용해서 객체를 축출할 당시의 freq 값이 몇인지 보여준다
 
 저자들은 실제 데이터에 LRU 캐시 정책을 적용해보면서 오브젝트가 캐시에서 제거될 때 freq 카운트 값을 기록했다. 위에서 앞서 보여준 라인 그래프와 유사하게 트위터의 경우 대략 26%, MSR은 78%정도의 객체가 freq 값이 1인걸 보여준다. LRU캐시에 기록되긴 했지만 2번 이상 발생할 요청이 아니다. 세상에서 가장 완벽한 캐시를 만들려면 미래에 발생할 정보를 완벽히 알고있어야 하지만 그것은 불가능하다.
 
@@ -122,9 +116,8 @@ ARC, LIRS 등 캐시 알고리즘들이 캐시 오염(cache pollution)을 막기
 
 위에서 많은 이야기를 했지만 S3-FIFO의 설계 및 구현 난이도는 굉장히 쉬운 편이다. 숙련된 코더라면 당장 에디터 창을 열어서 본인이 직접 코딩할 수 있을 정도이다. S3-FIFO는 전체 캐시 크기의 10%의 공간을 차지하는 small queue <strong>S</strong>와 main queue <strong>M</strong> 그리고 나중에 M 보내기 위한 ghost queue <strong>G</strong> 이 세가지 FIFO queue로 이루어져 있다.
 
-![](/img/medium/1-IITUp_SuQ0jQXJ8sXUwtjQ-4007187c32b8.png)
+![](/img/medium/1-IITUp_SuQ0jQXJ8sXUwtjQ-4007187c32b8.png "S3-FIFO의 구조")
 
-S3-FIFO의 구조
 
 ### 1️⃣ 읽기 연산 (Read)
 큐에 저장될 각 오브젝트는 2 비트 공간을 가진 빈도수 정보를 기록한다. 읽기 연산은 S 혹은 M에 이미 객체가 있다면 freq 변수를 min(freq+1,3) 으로 업데이트하고, 객체가 없다면 캐시에 정보를 저장하는 삽입 연산을 수행한다.
@@ -195,9 +188,8 @@ func (q *Queue) Enqueue(v interface{}) {
 ### 데이터 셋(Dataset)
 평가를 위해 총 14개의 데이터 셋을 이용했으며 이 중 11개는 공개된 데이터이고 3개는 기업에서 제공하는 비공개 데이터 셋이다. 웹 워크로드 뿐 아니라 블록 I/O, CDN, 키-밸류 데이터를 포함해서 총 854조개의 요청과 61조개의 오브젝트와 21,088 TB 규모의 트래픽, 그리고 총 3,753 TB 규모의 데이터를 가지고 실험을 진행했다. 아래 표는 이번 실험에 이용된 데이터 셋이다.
 
-![](/img/medium/1-AErmh7Hsx_8_GBd2VODqLw-34ac7d6542ef.png)
+![](/img/medium/1-AErmh7Hsx_8_GBd2VODqLw-34ac7d6542ef.png "S3-FIFO 큐의 성능 평가를 위해 사용된 데이터 셋")
 
-S3-FIFO 큐의 성능 평가를 위해 사용된 데이터 셋
 
 실험 자체는 [libCacheSim](https://github.com/1a1a11a/libCacheSim) 이라는 시뮬레이터를 이용했다. 재밌는 건 이게 논문 저자가 직접 개발한 시뮬레이터라는 것이다. META에서 만든 [libCache](https://github.com/facebook/CacheLib)을 시뮬레이션 용도로 변형한 거라서 실험 결과의 신뢰성에 대해서는 의심하지 않아도 된다. 필자가 재밌다고 한 건 코딩보다는 연구에만 강한 박사과정 학생분들도 꽤 많은데 이 분은 코딩 좀 치는 사람이라는 것이 재밌었다.
 
@@ -213,9 +205,8 @@ S3-FIFO 큐의 성능 평가를 위해 사용된 데이터 셋
 
 그림의 왼쪽 그래프는 전체 객체의 10%를 캐시 공간으로 잡는 경우이고 오른쪽 그래프는 캐시 공간을 0.1%로 설정한 경우의 실험 결과이다. 캐시 공간을 줄이면 캐시 미스율도 같이 떨어지는 경향이 나타난다. 그리고 일부 데이터 셋에 대해선 S3-FIFO의 성능이 다른 것 보다 낮은 경우가 있었다. 이는 대 부분의 객체가 단 2번만 히트되는 워크로드인 경우 small queue S의 캐시 미스가 빈번히 발생했다고 한다. 하지만 이는 TinyLFU, LIRS, 2Q 처럼 캐시 공간을 여러개로 분리한 알고리즘 대부분에 적용되는 항목이다.
 
-![](/img/medium/1-cCzTv5xtA7ElvoXkHzWsHg-574785d681e6.png)
+![](/img/medium/1-cCzTv5xtA7ElvoXkHzWsHg-574785d681e6.png "데이터 셋 별로 비교한 그림 / 거의 뭐 그림 그리기 장인이다.")
 
-데이터 셋 별로 비교한 그림 / 거의 뭐 그림 그리기 장인이다.
 
 위 표는 각 데이터 셋 별로 결과를 세부적으로 나타낸 것이다. 캐시 알고리즘이 다양한 데이터 셋에 대해서 잘 적용되어야 견고한 알고리즘이라고 말할 수 있을 것이다. 캐시 크기가 큰 경우 S3-FIFO 큐가 14개 데이터셋 중에 13개 데이터 셋에 대해서 가장 우위를 점하고 있으며 캐시 크기가 작은 경우 에는 쓸만한 정도로 좋았다 라고 볼 수 있음을 알 수 있다.
 
@@ -227,9 +218,8 @@ S3-FIFO의 핵심은 원-히트-원더 객체를 빠르게 필터링 해서 가�
   객체가 얼마나 빨리 small queue S에서 제거되었는지 속도를 나타낸 것이다. LRU에서 데이터가 제거되는 속도를 기준 점으로 잡고 ARC, TinyLFU와 비교했다.
 - <strong>Quick demotion precision</strong> : 제거된 오브젝트가 다시 캐시에 요청으로 들어오기 까지 걸리는 시간이 <strong>캐시 크기/캐시 미스율</strong> 보다 크다면 “아 역시 빨리 제거하길 잘했다" 라고 판단하고 이 비율을 계산했다.
 
-![](/img/medium/1-7oGYhnYDfsiwLN4vDukZIQ-c851c1e8f154.png)
+![](/img/medium/1-7oGYhnYDfsiwLN4vDukZIQ-c851c1e8f154.png "캐시 축출의 정확도와 속도를 나타낸 표")
 
-캐시 축출의 정확도와 속도를 나타낸 표
 
 위 그래프에서 밝은 색일 수록 전체 캐시 크기에서 small queue S에 할당한 비율이 더 크다는 걸 의미한다. S3-FIFO와 TinyLFU가 비교해 볼만하다. 우측 하단의 그림 (d)를 보면 캐시 크기가 작은 경우 정확도 차이가 0.01% 정도로 거의 비슷하다고 하고, 그림 (b)를 보면 TinyLFU의 정확도가 더 높다고 나온다.
 
@@ -245,9 +235,8 @@ Wikimedia & Tencent Photo CDN 데이터를 이용해서 실험을 진행했으�
 
 CDN에서는 캐시를 평가할 때 캐시 미스율보다 네트워크 대역폭까지 함께 고려한다. 아래 그림의 Y축은 얼마나 많은 데이터 쓰기가 발생했는지 보여주고 X축은 캐시 미스율을 나타낸다. 그래프의 원점에 가까울수록 좋은 캐시라는 의미이다.
 
-![](/img/medium/1-tjUPPZm2LKYCdo5XAD64WA-03b1b5eb1409.png)
+![](/img/medium/1-tjUPPZm2LKYCdo5XAD64WA-03b1b5eb1409.png "S3-FIFO가 얼마나 플래시 친화적인지 보여주는 그래프")
 
-S3-FIFO가 얼마나 플래시 친화적인지 보여주는 그래프
 
 ## 성능 평가
 
@@ -255,9 +244,8 @@ S3-FIFO가 얼마나 플래시 친화적인지 보여주는 그래프
 
 > 아래 표에서는 뜬금없이 Segcache라는 애가 등장하는데 이것도 논문 1저자가 연구한 캐시의 한 종류이다. 논문 낸 김에 끼워팔아서 이것도 드셔보실래요? 권장하듯이 등장한 거라 별로 큰 의미는 없는 것 같다.
 
-![](/img/medium/1-E2zkBMpXcfIrPGrlBRBZ9g-0e141b60450c.png)
+![](/img/medium/1-E2zkBMpXcfIrPGrlBRBZ9g-0e141b60450c.png "S3-FIFO 큐의 성능 평가")
 
-S3-FIFO 큐의 성능 평가
 
 ## SIEVE 설계 및 구현
 
@@ -265,15 +253,13 @@ S3-FIFO가 큐를 세 개나 쓰면서 구현했다면 SIEVE는 한술 더 떠�
 
 SIEVE는 최고의 알고리즘은 아니지만 심플하면서도 강력한 캐시 축출 알고리즘이라고 시장에서 포지셔닝 하고 있다. 아래 표는 캐시 히트, 축출, 삽입연산을 구현하기위해 필요한 코드 라인 수를 비교해서 보여준다.
 
-![](/img/medium/1-7JWMd5WqiD0PwaYtJtOZxg-c8994b01fb29.png)
+![](/img/medium/1-7JWMd5WqiD0PwaYtJtOZxg-c8994b01fb29.png "각 알고리즘 별 필요한 코드 구현 라인 수")
 
-각 알고리즘 별 필요한 코드 구현 라인 수
 
 뿐만 아니라 실제 오픈소스를 수정해서 SIEVE를 구현하는데 필요한 라인수를 언어별로 보여준다. 테스트 코드를 수정하기 위한 라인 수는 표현하지 않았다. 새로운 캐시들이 계속 연구 결과로 발표되고 있지만 현업에서 실제로 적용되는 경우는 많지 않은데 그 이유를 구현의 복잡해지면 무언가 잘못되었을 때 디버깅 하기가 어렵고 버그가 발생할 가능성이 크기 때문이라고 설명한다. 이 논문에선 알고리즘의 심플함을 많이 강조한다.
 
-![](/img/medium/1-etgDYcbG0nbBKX393mtYww-fdd6f633392a.png)
+![](/img/medium/1-etgDYcbG0nbBKX393mtYww-fdd6f633392a.png "오픈소스에 SIEVE를 도입하기 위해 필요한 코드 구현 라인 수")
 
-오픈소스에 SIEVE를 도입하기 위해 필요한 코드 구현 라인 수
 
 ### Lazy Promotion & Quick Demotion
 Lazy Promotion은 객체를 캐시에 <strong>‘유지’</strong>하겠다 라는 판단을 데이터를 제거해야하는 시점에 판단하는 것을 말한다. LRU 캐시는 객체의 접근 빈도수를 업데이트 하면서 객체를 즉시 head로 프로모팅 하는 반면에 이를 최대한 지연 시켜서 프로모션에 필요한 비용을 줄이겠다는 전략이다. Quick Demotion은 위에서 한 번 설명한 내용이라 생략한다. 이 둘이 SIEVE의 주요 전략이다.
@@ -283,24 +269,21 @@ SIEVE는 다른 캐시보다 CLOCK 알고리즘과의 비교가 매우 중요해
 
 ### 구현 (Implementation)
 
-![](/img/medium/1-Iwm6cQm7EtNshQjcLbDezA-a844143a76fa.png)
+![](/img/medium/1-Iwm6cQm7EtNshQjcLbDezA-a844143a76fa.png "SIEVE와 CLOCK 구현체의 비교")
 
-SIEVE와 CLOCK 구현체의 비교
 
 위 그림은 SIEVE 알고리즘의 구현 원리와 함께 비교를 위해 FIFO-Reinsertion도 같이 보여준다. 사실 FIFO-Reinsertion과 CLOCK이 같은 알고리즘이기 때문에 CLOCK과 비교한다고 받아들이는게 좋다.
 
 SIEVE는 하나의 큐와 hand 라는 특수한 포인터 변수를 함께 사용한다. 캐시 히트가 발생하는 경우 객체의 visited 변수를 1로 변경하는 역할만 하고 아무것도 하지 않는다. 캐시 미스의 경우 hand포인터가 head로 향하는데 방문하는 모든 객체의 visited 변수를 0으로 바꾸고, 만약 이미 0이라면 해당 객체를 캐시에서 제거한다. 아래는 SIEVE의 의사코드를 보여준다.
 
-![](/img/medium/1-rJDjhFBpsKlwBIg4DmtLXA-b4393daa0d5f.png)
+![](/img/medium/1-rJDjhFBpsKlwBIg4DmtLXA-b4393daa0d5f.png "SIEVE 알고리즘의 의사코드")
 
-SIEVE 알고리즘의 의사코드
 
 ## 평가
 데이터 셋은 트위터와 메타의 데이터 셋을 포함해 총 7개의 데이터 소스를 이용했으며 총 1559개의 트레이스 데이터를 가지고 평가를 진행했다.
 
-![](/img/medium/1-WF2DGAx5DL6JBL7zWC0Ilw-2eee07e24522.png)
+![](/img/medium/1-WF2DGAx5DL6JBL7zWC0Ilw-2eee07e24522.png "1559개의 트레이스를 이용한 평과 결과")
 
-1559개의 트레이스를 이용한 평과 결과
 
 캐시 크기가 큰 경우 SIEVE는 거의 모든 분야에서 개선된 모습을 보여준다. SIEVE는 10%의 해당하는 트레이스에 대해 최대 42% 캐시 미스 감소율을 보였고 CDN1에 대해서 평균적으로 21%의 캐시 미스 감소율을 보여준다. 다른 알고리즘과 비교해서는 ARC보다 1.5% 감소를 보여주는데 논문에서는 특별히 1.5%를 감소시킨다는 건 굉장히 큰 결과라고 한 번 강조했다.
 
@@ -311,16 +294,14 @@ SIEVE 알고리즘의 의사코드
 
 CLOCK의 경우 tail 포인터에서 축출한 대상에게 한 번 더 기회를 주는 느낌으로 head로 옮기는 반면 SIEVE는 hand 포인터가 “너 다음에 두고보자” 라고 언지를 두면서 head로 포인터가 움직인다. 즉 다시 한 번 기회를 받은 객체들은 평균적으로 큐의 뒷 부분에 위치하게 되고 새로운 객체들은 head 쪽에 위치하게 된다. hand 포인터가 점점 head 쪽으로 가까워지기 때문에 캐시 미스가 발생할 경우 축출 대상을 탐색할 때 <strong>새로운 객체</strong>를 위주로 탐색하기 때문에 Quick Demotion이 제대로 작동하는 것이다.
 
-![](/img/medium/1-s-CEtILbnlJ1Koa12STn0w-129015709b2b.png)
+![](/img/medium/1-s-CEtILbnlJ1Koa12STn0w-129015709b2b.png "SIEVE의 sifting 과정을 묘사한 그림")
 
-SIEVE의 sifting 과정을 묘사한 그림
 
 ### Cache Primitives 로서의 가능성
 여기서 또 하나 강조하는 점이 SIEVE가 좀 더 복잡하고 고급진 캐시 정책을 설계할 때 Cache Primitive로서 역할을 할 수 있다는 것이다. 대부분의 고도화된 캐시 정책들이 FIFO, LRU, LFU를 핵심 재료로 사용하면서 성능을 높이고 있는데 SIEVE도 이런 핵심 재료로 쓰일 수 있다고 주장한다. 예를 들어 ARC 알고리즘에서 LRU 컴포넌트를 SIEVE로 교체하면 최대 62.5%, 평균 3.7%의 개선이 있다고 한다.
 
-![](/img/medium/1-Xmojh3M2mPhOnRulAOWOzA-4939aa64df45.png)
+![](/img/medium/1-Xmojh3M2mPhOnRulAOWOzA-4939aa64df45.png "SIEVE / Cache primitives 로서의 가능성을 보여주는 그래프")
 
-SIEVE / Cache primitives 로서의 가능성을 보여주는 그래프
 
 ### Scan-Resistant
 
@@ -338,9 +319,8 @@ scan-resistant란 범위로 탐색하는 쿼리가 주어질 때 캐시가 여�
 
 마지막으로 필자도 이 연구들을 직접 평가해보고자 go언어로 캐시 라이브러리를 작성 및 평가를 진행해봤다. 바로 [여기](https://github.com/scalalang2/golang-fifo)에서 구현체를 확인할 수 있다. 실제 데이터가 아니라서 그런지 몰라도 S3-FIFO가 TinyLFU에 비해 미세하게 더 효율성이 떨어졌다. 오히려 마지막에 설명한 SIEVE가 이 둘을 미세하게 능가했으며 멀티-쓰레드 환경에서 더 높은 성능을 보여주었다.
 
-![](/img/medium/1-3X3z7RuxLFaUi3UcVce1Cg-4e26f7f7723e.png)
+![](/img/medium/1-3X3z7RuxLFaUi3UcVce1Cg-4e26f7f7723e.png "[https://x.com/richardartoul/status/1748897092221751582?s=20](https://x.com/richardartoul/status/1748897092221751582?s=20)")
 
-[https://x.com/richardartoul/status/1748897092221751582?s=20](https://x.com/richardartoul/status/1748897092221751582?s=20)
 
 한 번 만들어두니까 많은 사람들이 평가해주는 모습이 너무 신기하다.
 
