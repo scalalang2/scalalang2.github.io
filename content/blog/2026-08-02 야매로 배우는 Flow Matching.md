@@ -24,8 +24,7 @@ draft: true
 3. Diffusion Model
 4. Flow Model
 5. Flow Matching
-6. Flow Matching의 의의
-7. 마무리
+6. 마무리
 
 ## 코드에서 시작하기
 이번 글은 Flow Matching의 동작 원리를 보여주는 PyTorch 코드에서 출발합니다. 평소라면 이론으로 시작해서 코드 구현 순서로 서술했을텐데요. 오늘은 거꾸로 코드에서 출발해서 이론적인 이야기로 들어가보겠습니다.
@@ -33,8 +32,8 @@ draft: true
 ![](/img/blog/image2.png "Flow Matching 논문 Figure 4. 가우시안 분포에서 샘플링해서 체크보드 모양으로 이동하는 모습을 보여준다.")
 
 위 그림은 논문에서 Flow Matching이 왜 Diffusion 보다 나은지 보여주기 위해서 사용한 자료로, 초기 분포(= 가우시안 분포)에서 체크보드 데이터 분포의 모양으로 이동하는 모습을 보여줍니다. 먼저 우리가 찾고싶은 체크보드 데이터 분포부터 정의해봅시다.
-
-**1️⃣ 학습 데이터 정의**
+ 
+**① 학습 데이터 정의**
 
 ```python
 def sample_checkerboard(count: int) -> torch.Tensor:
@@ -54,7 +53,7 @@ print(checkerboard_samples.shape)
 
 ![](/img/blog/image3.png)
 
-**2️⃣ 신경망 레이어**
+**② 신경망 레이어**
 
 다음에는, 간단한 레이어 구조를 가진 신경망을 하나 정의합니다. 이 모델은 데이터에 해당하는 변수 $x$를 입력받고 시간 변수인 $t$를 추가로 받습니다. 여기서 $t$는 Diffusion Model의 시간 개념과 동일한데요. 더 자세한 뒤에서 다루겠습니다.
 
@@ -76,7 +75,7 @@ class VelocityField(nn.Module):
         return self.network(torch.cat((x, t), dim=1))
 ```
 
-**3️⃣ Flow Matching 학습**
+**③ Flow Matching 학습**
 
 학습 과정은 우리가 이미 알고 있는 가우시안 분포에서 초기 노이즈이자 출발점인 $x_0$을 하나 뽑고, 타게 데이터 분포에서 도착점 $x_1$을 뽑습니다. 그리고 0~1 사이의 시간 $t$를 선택한 다음 두 점 사이를 직선으로 보간한 위치 $x_t$를 계산합니다.
 
@@ -115,13 +114,15 @@ for _step in range(training_steps):
 model.eval()
 ```
 
-**4️⃣ 데이터 생성 단계**
+**④ 데이터 생성 단계**
 
 데이터를 생성할 때는 시간 $t: 0 \rightarrow 1$와 함께 데이터 $x$를 모델 입력으로 넣고 출력 결과를 $x$에 더합니다. 이를 반복적으로 수행하면서 노이즈에서 시작했던 분포가 점점 원하는 타겟 분포에 가까워 집니다.
 
 $$
 \hat{x_1} = x_0 + \int_0^1 u_t^{\theta}(x)dt
 $$
+
+누군가는 이를 상미분방정식(ODE)을 풀기위한 [오일러 메서드](https://en.wikipedia.org/wiki/Euler_method)라고 하는데요. 일단 여기서는 ODE를 풀기 위한 방법이라고만 이해하고 넘어갑니다.
 
 ```python
 @torch.no_grad()
@@ -166,9 +167,30 @@ generated_samples, trajectories = generate(initial_samples)
 ## Diffusion Model
 Diffusion Model은 예전에 제가 작성한 [이전 글](/p/AI와-게임-개발-3D-생성-모델-연구-맛보기/)에서 다룬 적이 있습니다. 여기서는 Diffusion Model의 간단한 아이디어만 다루겠습니다.
 
-**Diffusion Model**은 $P_data$의 표본이자 현실 세계에서 관측한 데이터에 노이즈를 점진적으로 추가해서 우리가 다루기 쉬운 가우시안 분포의 노이즈로 만듭니다. 노이즈를 계속 추가해서 가우시안 분포를 만드는
+**Diffusion Model**은 $P_data$의 표본이자 현실 세계에서 관측한 데이터에 노이즈를 점진적으로 추가해서 우리가 <u>다루기 쉬운 분포인</u> 가우시안 노이즈로 만듭니다. 
 
+이 때 신경망이 각 단계에서 데이터에 추가된 노이즈를 추정하도록 학습해서 근사하면, 노이즈에서 시작해서 노이즈를 제거하면서 새로운 이미지를 생성하는 아이디어가 Diffusion Model이고 이를 실용적으로 사용할 수 있게끔 완성한 대표적인 연구가 [DDPM(Denoising Diffusion Probabilistic Models
+)](https://arxiv.org/abs/2006.11239)입니다.
+
+![](/img/blog/image9.png "Diffusion Models: A Comprehensive Survey of Methods and Applications")
+
+> Flow Matching도 기존에 존재하던 Flow Model 접근 방식을 신경망에서 실용적으로 사용할 수 있게 완성했다는 점에서 DDPM과 결을 같이합니다.
 
 ## Flow Model
+Flow Model은 2010년대부터 Normalizing Flow를 이용해서 단순한 분포를 복잡한 분포로 바꾸는 방식입니다. 여기서는 유체역학, 전자기학 등 물리학에서 쓰인 Flow와 Vector Field의 개념을 이용하는데요. 먼저 용어부터 정리하고 갑시다.
 
-## 
+**궤적(Trajectory)** 은 $x_{0} \rightarrow x_{t}$ 로 시간에 따라 변화하는 무언가를 말합니다. 여기서 $x$는 $\mathbb{R}^d$로 d차원의 벡터입니다.
+
+**벡터장(Vector Field)** 은 $u_t : \mathbb{R}^d  \rightarrow \mathbb{R}^d$ 로 표기하고, 벡터를 입력으로 해서 벡터를 반환합니다. 이 결과가 말하는 건 $(x,t) \rightarrow u_t(x)$ 시간 $t$ 시점에 $x$가 가야할 방향을 제시해주는 역할을 하고, 대표적인 예시로 중력이 있습니다.
+
+Flow Model은 시간 $t$에서 점의 위치를 알아낼 수 있는 함수 $X_t$가 존재할 때, 상미분방정식(ODE)을 이용해서 다음 문제를 풀고자 합니다.
+
+$$
+\frac{dX_{t}}{dt} = u_{t}(X_{t}) \qquad X_{0} = x_{0}
+$$
+
+> ODE(Ordinary differential equation)는 미분이 포함된 방정식을 말합니다. 예를 들어, $x(t) = t^2$이라는 함수를 미분하면 $2t$가 나오는 건 자명하죠. 상미분방정식은 미분의 결과가 주어졌을 때 원래 $x$가 무슨 함수였는가를 풀이하는 겁니다. $\frac{dx}{dt} = 2t$라는 방정식이 주어졌을 때 원래의 $x$를 찾는데 정보가 충분하지 않기 때문에 $x(0)=3$ 이라는 추가정보가 있어야 하고 이 식을 ODE Solver로 찾아내면 $x(t) = t^2 + 3$이라는 결과가 나옵니다.
+
+## Flow Matching
+
+## 마무리
