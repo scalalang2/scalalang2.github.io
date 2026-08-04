@@ -96,7 +96,9 @@
       if (!this.w || !this.h) return;
       this.clear();
       if (this.kind === 'trajectory') this.drawTrajectory();
-      else this.drawField();
+      else if (this.kind === 'field') this.drawField();
+      else if (this.kind === 'divergence') this.drawDivergence();
+      else if (this.kind === 'diffusion-vs-flow') this.drawDiffusionVsFlow();
       this.slider.value = this.t;
     }
 
@@ -181,6 +183,124 @@
         const p = path[path.length-1]; c.fillStyle = index === 1 ? (dark ? '#e2e8f0' : '#334155') : (dark ? '#94a3b8' : '#64748b'); c.beginPath(); c.arc(p.x*w,p.y*h,index===1?4:3,0,TAU); c.fill();
       });
       c.fillStyle = dark ? '#cbd5e1' : '#475569'; c.font = '600 11px ui-monospace, monospace'; c.fillText('uₜ(x)', 14, 20);
+    }
+
+    drawDivergence() {
+      const c = this.ctx, w = this.w, h = this.h;
+      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const ink = dark ? '#e2e8f0' : '#334155';
+      const muted = dark ? '#94a3b8' : '#64748b';
+      const accent = dark ? '#60a5fa' : '#2563eb';
+      const purple = dark ? '#a78bfa' : '#8b5cf6';
+      const border = dark ? 'rgba(148,163,184,.22)' : 'rgba(100,116,139,.20)';
+      const gap = Math.max(8, w * .018), margin = Math.max(10, w * .025);
+      const panelW = (w - margin * 2 - gap * 2) / 3;
+      const panels = [
+        { mode: 'outflow', formula: '∇·u > 0', detail: '퍼져 나감', color: accent },
+        { mode: 'inflow', formula: '∇·u < 0', detail: '한곳으로 모임', color: purple },
+        { mode: 'same', formula: '∇·u = 0', detail: '그대로 통과', color: muted }
+      ];
+
+      panels.forEach((panel, panelIndex) => {
+        const left = margin + panelIndex * (panelW + gap), top = 8, panelH = h - 18;
+        const cx = left + panelW / 2, cy = top + panelH * .58;
+        const radius = Math.min(panelW, panelH) * .34;
+        c.strokeStyle = border; c.lineWidth = 1; c.strokeRect(left, top, panelW, panelH);
+        c.textAlign = 'center'; c.fillStyle = panel.color;
+        c.font = `700 ${w < 520 ? 9 : 11}px ui-monospace, monospace`; c.fillText(panel.formula, cx, 27);
+        c.fillStyle = ink; c.font = `500 ${w < 520 ? 8 : 10}px system-ui, sans-serif`; c.fillText(panel.detail, cx, 43);
+
+        if (panel.mode === 'same') {
+          const cols = w < 520 ? 3 : 4, rows = 4;
+          for (let row = 0; row < rows; row++) for (let col = 0; col < cols; col++) {
+            const x = left + 14 + col * ((panelW - 28) / (cols - 1));
+            const y = top + 58 + row * ((panelH - 78) / (rows - 1));
+            this.arrow(x, y, 1, 0, dark ? 'rgba(148,163,184,.54)' : 'rgba(71,85,105,.48)');
+          }
+          for (let i = 0; i < 14; i++) {
+            const progress = (this.t + i / 14) % 1;
+            const x = left + 7 + progress * (panelW - 14), y = cy + ((i % 4) - 1.5) * Math.min(22, panelH * .11);
+            const alpha = .25 + .75 * Math.sin(Math.PI * progress);
+            c.fillStyle = `rgba(100,116,139,${alpha})`; c.beginPath(); c.arc(x, y, 2.8, 0, TAU); c.fill();
+          }
+          return;
+        }
+
+        const direction = panel.mode === 'outflow' ? 1 : -1;
+        for (let i = 0; i < 8; i++) {
+          const a = i / 8 * TAU, ux = Math.cos(a), uy = Math.sin(a);
+          this.arrow(cx + ux * radius * .42, cy + uy * radius * .42, ux * direction, uy * direction,
+            panel.mode === 'outflow' ? (dark ? 'rgba(96,165,250,.68)' : 'rgba(37,99,235,.62)') : (dark ? 'rgba(167,139,250,.68)' : 'rgba(139,92,246,.62)'));
+        }
+        for (let i = 0; i < 18; i++) {
+          const a = i * 2.399963, base = (this.t + i / 18) % 1;
+          const progress = direction > 0 ? base : 1 - base;
+          const r = lerp(6, radius, progress), alpha = .22 + .78 * Math.sin(Math.PI * progress);
+          c.globalAlpha = alpha; c.fillStyle = panel.color; c.beginPath(); c.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 2.8, 0, TAU); c.fill(); c.globalAlpha = 1;
+        }
+        c.fillStyle = ink; c.beginPath(); c.arc(cx, cy, 3.5, 0, TAU); c.fill();
+      });
+      c.textAlign = 'start';
+    }
+
+    comparisonPoint(index, t, isDiffusion) {
+      const start = { x: .10, y: .72 - index * .11 };
+      const end = { x: .88, y: .31 + index * .095 };
+      if (!isDiffusion) {
+        return {
+          x: lerp(start.x, end.x, t),
+          y: lerp(start.y, end.y, t) - Math.sin(Math.PI * t) * (.09 + index * .008)
+        };
+      }
+      const steps = 8, stepped = Math.floor(t * steps) / steps;
+      const s = clamp(stepped);
+      const zig = Math.sin(s * steps * Math.PI * .92 + index * 1.7) * .10 * Math.sin(Math.PI * s);
+      return { x: lerp(start.x, end.x, s), y: lerp(start.y, end.y, s) + zig };
+    }
+
+    drawComparisonPath(panel, index, isDiffusion, color) {
+      const c = this.ctx, steps = isDiffusion ? 8 : 44;
+      c.beginPath();
+      for (let j = 0; j <= steps; j++) {
+        const q = this.comparisonPoint(index, j / steps, isDiffusion);
+        const x = panel.left + q.x * panel.width, y = panel.top + q.y * panel.height;
+        j ? c.lineTo(x, y) : c.moveTo(x, y);
+      }
+      c.strokeStyle = color; c.lineWidth = 1.1; c.stroke();
+    }
+
+    drawDiffusionVsFlow() {
+      const c = this.ctx, w = this.w, h = this.h;
+      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const ink = dark ? '#e2e8f0' : '#334155', muted = dark ? '#94a3b8' : '#64748b', accent = dark ? '#60a5fa' : '#2563eb';
+      const border = dark ? 'rgba(148,163,184,.22)' : 'rgba(100,116,139,.20)';
+      const gap = Math.max(10, w * .025), margin = Math.max(10, w * .025), top = 42, panelH = h - top - 16;
+      const panelW = (w - margin * 2 - gap) / 2;
+      const panels = [
+        { left: margin, top, width: panelW, height: panelH, title: 'Diffusion', subtitle: '여러 단계로 노이즈 제거', diffusion: true },
+        { left: margin + panelW + gap, top, width: panelW, height: panelH, title: 'Flow', subtitle: '벡터장을 따라 연속 이동', diffusion: false }
+      ];
+      const step = Math.min(8, Math.floor(this.t * 8) + 1);
+
+      panels.forEach(panel => {
+        const cx = panel.left + panel.width / 2;
+        c.strokeStyle = border; c.lineWidth = 1; c.strokeRect(panel.left, panel.top, panel.width, panel.height);
+        c.textAlign = 'center'; c.fillStyle = ink; c.font = `700 ${w < 520 ? 11 : 13}px system-ui, sans-serif`; c.fillText(panel.title, cx, 17);
+        c.fillStyle = muted; c.font = `500 ${w < 520 ? 8 : 10}px system-ui, sans-serif`; c.fillText(panel.subtitle, cx, 33);
+
+        for (let i = 0; i < 5; i++) this.drawComparisonPath(panel, i, panel.diffusion, border);
+        for (let i = 0; i < 5; i++) {
+          const q0 = this.comparisonPoint(i, 0, panel.diffusion), q1 = this.comparisonPoint(i, 1, panel.diffusion), q = this.comparisonPoint(i, this.t, panel.diffusion);
+          const map = p => ({ x: panel.left + p.x * panel.width, y: panel.top + p.y * panel.height });
+          const a = map(q0), b = map(q1), p = map(q);
+          c.fillStyle = dark ? 'rgba(148,163,184,.28)' : 'rgba(100,116,139,.24)'; c.beginPath(); c.arc(a.x, a.y, 2.2, 0, TAU); c.fill();
+          c.fillStyle = dark ? 'rgba(96,165,250,.25)' : 'rgba(37,99,235,.20)'; c.beginPath(); c.arc(b.x, b.y, 2.2, 0, TAU); c.fill();
+          c.fillStyle = i % 2 ? accent : ink; c.beginPath(); c.arc(p.x, p.y, 3.2, 0, TAU); c.fill();
+        }
+        c.fillStyle = muted; c.font = `600 ${w < 520 ? 8 : 10}px ui-monospace, monospace`;
+        c.fillText(panel.diffusion ? `step ${step}/8` : `t = ${this.t.toFixed(2)}`, cx, panel.top + panel.height - 8);
+      });
+      c.textAlign = 'start';
     }
 
   }

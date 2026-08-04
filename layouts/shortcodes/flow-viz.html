@@ -1,11 +1,9 @@
 {{- $kind := .Get "kind" -}}
-{{- if eq $kind "trajectory" -}}
 <link rel="stylesheet" href="/css/flow-visualizations.css">
 <script defer src="/js/flow-visualizations.js"></script>
-{{- end -}}
 <figure class="flow-viz" data-flow-viz="{{ $kind }}">
   <div class="flow-viz__stage">
-    <canvas aria-label="{{ if eq $kind "trajectory" }}시간에 따라 궤적 위를 이동하는 입자 시각화{{ else }}시간에 따라 방향과 세기가 변하는 벡터장 시각화{{ end }}"></canvas>
+    <canvas aria-label="{{ if eq $kind "trajectory" }}시간에 따라 궤적 위를 이동하는 입자 시각화{{ else if eq $kind "field" }}시간에 따라 방향과 세기가 변하는 벡터장 시각화{{ else if eq $kind "divergence" }}Outflow, Inflow, Same 세 발산 상태에서 입자가 움직이는 비교 시각화{{ else }}Diffusion의 단계적인 노이즈 제거와 Flow의 연속적인 이동을 비교하는 시각화{{ end }}"></canvas>
   </div>
   <div class="flow-viz__controls">
     <button type="button" class="flow-viz__play" aria-label="애니메이션 재생 또는 일시정지">

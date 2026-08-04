@@ -169,8 +169,7 @@ Diffusion Model은 예전에 제가 작성한 [이전 글](/p/AI와-게임-개�
 
 **Diffusion Model**은 $P_data$의 표본이자 현실 세계에서 관측한 데이터에 노이즈를 점진적으로 추가해서 우리가 <u>다루기 쉬운 분포인</u> 가우시안 노이즈로 만듭니다. 
 
-이 때 신경망이 각 단계에서 데이터에 추가된 노이즈를 추정하도록 학습해서 근사하면, 노이즈에서 시작해서 노이즈를 제거하면서 새로운 이미지를 생성하는 아이디어가 Diffusion Model이고 이를 실용적으로 사용할 수 있게끔 완성한 대표적인 연구가 [DDPM(Denoising Diffusion Probabilistic Models
-)](https://arxiv.org/abs/2006.11239)입니다.
+이 때 신경망이 각 단계에서 데이터에 추가된 노이즈를 추정하도록 학습해서 근사하면, 노이즈에서 시작해서 노이즈를 제거하면서 새로운 이미지를 생성하는 아이디어가 Diffusion Model이고 이를 실용적으로 사용할 수 있게끔 완성한 대표적인 연구가 [DDPM(Denoising Diffusion Probabilistic Models)](https://arxiv.org/abs/2006.11239)입니다.
 
 ![](/img/blog/image9.png "Diffusion Models: A Comprehensive Survey of Methods and Applications")
 
@@ -221,6 +220,8 @@ $$
 - $\nabla \cdot u < 0$ : 한곳으로 모임
 - $\nabla \cdot u = 0$ : 질량이 보존됨
 
+{{< flow-viz kind="divergence" >}}
+
 우리는 확률 밀도를 이동시키는 것이기 때문에, 질량이 사라지면 안됩니다. 이런 관계를 정의한 것이 연속방정식이고 아래 처럼 표현할 수 있습니다.
 
 $$
@@ -260,7 +261,7 @@ $$
 x_t = (1 - t)x_0 + tx_1
 $$ 
 
-이 수식을 다시 시간으로 미분하면, 샘플의 속도는 다음과 같이 나오기 때문에 조건부 목표 속도를 쉽게 얻을 수 있습니다.
+이를 다시 시간으로 미분하면, 샘플의 속도는 다음과 같이 나오기 때문에 조건부 목표 속도를 쉽게 얻을 수 있습니다.
 
 $$
 \frac{dx_t}{dt} = x_1 - x_0
@@ -272,4 +273,17 @@ $$
 \mathcal{L}_{CFM}(\theta) = \mathbb{E} [||u_t^{\theta}(x_t) - u_t(x_t|x_1)||^2]
 $$
 
+사실 $x_t = (1 - t)x_0 + tx_1$ 이렇게 선형 보간 하자는 아이디어는 [Rectified Flow](https://arxiv.org/pdf/2209.03003)라는 논문에서 제시한 방식입니다. 원래 Flow Matching은 조건부 확률 경로를 가우시안 형태로 정의했는데요.
+
+$$
+p_t(x|x_1) = \mathcal{N}(x|u_t(x_1),\sigma_t(x_1)^2I)
+$$
+
+즉, 확률 함수가 $t = 0$에서는 표준 가우시안이고 $t=1$ 에서는 $x_1$ 주변에 집중된 작은 가우시안 형태의 모양이 됩니다. Flow Matching 논문은 이렇게 일단 정의하긴 했지만, 요즘에는 `Rectified Flow`가 수식이 간단하기 때문에 많이 이용됩니다.
+
 ## 마무리
+여기까지가 제가 준비한 Flow Matching의 개념이었습니다. 아직 저도 모든걸 이해하진 못했고 설명할 자신이 없어서 의도적으로 제외한 내용들이 있습니다. 그래도 적어도 컨셉 정도는 받아들일 준비가 
+
+Rectified Flow를 쓰는 Flow Matching은 직선 경로를 따라서 밀도가 이동하기 때문에, 
+
+{{< flow-viz kind="diffusion-vs-flow" >}}
