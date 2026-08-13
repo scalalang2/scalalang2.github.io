@@ -1,12 +1,10 @@
 ---
 title: "3D Gaussian Splatting 대충이라도 이해해보기"
 date: "2025-01-04T10:07:55.897Z"
-slug: "3d-gaussian-splatting이-게임-개발의-패러다임을-바꿀-수-있을까-bf7bc66d7ae4"
+slug: "3d-gaussian-splatting-대충-이해하기"
 description: "2023년 8월, 컴퓨터 그래픽스 최대 학회인 SIGGRAPH에서 발표된 하나의 논문이 학계에서 굉장히 많은 관심을 받고 있습니다."
 tags: []
 ---
-
-### 3D GS가 게임 개발의 새로운 패러다임이 될 수 있을까
 
 2023년 8월, 컴퓨터 그래픽스 최대 학회인 SIGGRAPH에서 발표된 하나의 논문이 학계에서 굉장히 많은 관심을 받고 있습니다.
 
