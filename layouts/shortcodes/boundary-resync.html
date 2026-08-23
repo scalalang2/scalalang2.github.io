@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="/css/fixed-chunk-shift.css">
+
+<figure class="chunk-shift resync-viz" aria-labelledby="boundary-resync-caption">
+  <div class="chunk-shift__header">
+    <span>Boundary resynchronization</span>
+  </div>
+
+  <div class="resync-viz__comparison" role="img" aria-label="짧은 마스크에서는 두 버전의 경계가 P와 Q로 어긋나지만 넓은 마스크에서는 모두 Q에서 다시 일치하는 예시">
+    <section class="resync-viz__case resync-viz__case--short">
+      <div class="resync-viz__case-header">
+        <span>짧은 mask</span>
+        <code>00000011111</code>
+      </div>
+      <div class="resync-viz__bits" aria-hidden="true">
+        <span><b>P</b> 10101000000 <em>CUT</em></span>
+        <span><b>Q</b> 00111000000 <em>CUT</em></span>
+      </div>
+      <div class="resync-viz__axis" aria-hidden="true">
+        <span class="resync-viz__point resync-viz__point--p">P</span>
+        <span class="resync-viz__point resync-viz__point--q">Q</span>
+      </div>
+      <div class="resync-viz__versions" aria-hidden="true">
+        <div class="resync-viz__version">
+          <span>V1</span>
+          <div class="resync-viz__track"><i class="resync-viz__cut resync-viz__cut--p"></i></div>
+        </div>
+        <div class="resync-viz__version">
+          <span>V2</span>
+          <div class="resync-viz__track resync-viz__track--late"><i class="resync-viz__scan-start">scan</i><i class="resync-viz__cut resync-viz__cut--q"></i></div>
+        </div>
+      </div>
+      <p class="resync-viz__result">P ≠ Q <span>경계 불일치</span></p>
+    </section>
+
+    <section class="resync-viz__case resync-viz__case--wide">
+      <div class="resync-viz__case-header">
+        <span>넓은 mask</span>
+        <code>10000001111</code>
+      </div>
+      <div class="resync-viz__bits" aria-hidden="true">
+        <span><b>P</b> 10101000000 <em>NOT CUT</em></span>
+        <span><b>Q</b> 00111000000 <em>CUT</em></span>
+      </div>
+      <div class="resync-viz__axis" aria-hidden="true">
+        <span class="resync-viz__point resync-viz__point--p">P</span>
+        <span class="resync-viz__point resync-viz__point--q">Q</span>
+      </div>
+      <div class="resync-viz__versions" aria-hidden="true">
+        <div class="resync-viz__version">
+          <span>V1</span>
+          <div class="resync-viz__track"><i class="resync-viz__cut resync-viz__cut--q"></i></div>
+        </div>
+        <div class="resync-viz__version">
+          <span>V2</span>
+          <div class="resync-viz__track resync-viz__track--late"><i class="resync-viz__scan-start">scan</i><i class="resync-viz__cut resync-viz__cut--q"></i></div>
+        </div>
+      </div>
+      <p class="resync-viz__result">Q = Q <span>경계 재동기화</span></p>
+    </section>
+  </div>
+</figure>

@@ -5,6 +5,77 @@
     --font-size-secondary: 1em;
   }
 
+  :root[data-theme="light"] {
+    --bg-color-primary: #fdfdfd;
+    --bg-color-secondary: #f2f4f7;
+    --text-color-primary: #1a1a1a;
+    --text-color-secondary: #444;
+    --text-color-tertiary: #8c8c8c;
+    --link-color: #0066cc;
+    --link-visited-color: #551a8b;
+    --border-color: #d0d7de;
+    --upvoted-color: #fa8072;
+  }
+
+  :root[data-theme="dark"] {
+    --bg-color-primary: #121212;
+    --bg-color-secondary: #1c1f24;
+    --text-color-primary: #e5e5e5;
+    --text-color-secondary: #b3b3b7;
+    --text-color-tertiary: #a0a0a0;
+    --link-color: #6da6ff;
+    --link-visited-color: #b388ff;
+    --border-color: #30363d;
+    --upvoted-color: #ff6b6b;
+  }
+
+  nav {
+    align-items: center;
+    display: flex;
+    min-height: 2rem;
+  }
+
+  .theme-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    height: 2rem;
+    justify-content: center;
+    margin-left: auto;
+    padding: 0;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    width: 2rem;
+  }
+
+  .theme-toggle:hover {
+    background: var(--bg-color-secondary);
+    color: var(--text-color-primary);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+  }
+
+  .theme-toggle svg {
+    fill: none;
+    height: 1.15rem;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    width: 1.15rem;
+  }
+
+  :root[data-theme="light"] .theme-toggle__sun,
+  :root[data-theme="dark"] .theme-toggle__moon {
+    display: none;
+  }
+
   input,
   time {
     font-size: 0.95em;
@@ -280,6 +351,137 @@
       background-color: #033a16;
       color: #aff5b4;
     }
+  }
+
+  :root[data-theme="light"] code {
+    background-color: rgba(175, 184, 193, 0.2);
+    color: #24292f;
+  }
+
+  :root[data-theme="light"] div.highlight,
+  :root[data-theme="light"] div.highlight pre,
+  :root[data-theme="light"] .chroma {
+    background: #f6f8fa;
+    color: #24292f;
+  }
+
+  :root[data-theme="light"] div.highlight { border-color: #d0d7de; }
+  :root[data-theme="light"] .chroma .c,
+  :root[data-theme="light"] .chroma .c1,
+  :root[data-theme="light"] .chroma .cm,
+  :root[data-theme="light"] .chroma .cp,
+  :root[data-theme="light"] .chroma .cs { color: #6e7781; }
+  :root[data-theme="light"] .chroma .k,
+  :root[data-theme="light"] .chroma .kc,
+  :root[data-theme="light"] .chroma .kd,
+  :root[data-theme="light"] .chroma .kn,
+  :root[data-theme="light"] .chroma .kp,
+  :root[data-theme="light"] .chroma .kr,
+  :root[data-theme="light"] .chroma .kt,
+  :root[data-theme="light"] .chroma .ow { color: #cf222e; }
+  :root[data-theme="light"] .chroma .s,
+  :root[data-theme="light"] .chroma .s1,
+  :root[data-theme="light"] .chroma .s2,
+  :root[data-theme="light"] .chroma .sa,
+  :root[data-theme="light"] .chroma .sb,
+  :root[data-theme="light"] .chroma .sc,
+  :root[data-theme="light"] .chroma .sd,
+  :root[data-theme="light"] .chroma .se,
+  :root[data-theme="light"] .chroma .sh,
+  :root[data-theme="light"] .chroma .si,
+  :root[data-theme="light"] .chroma .sx { color: #0a3069; }
+  :root[data-theme="light"] .chroma .m,
+  :root[data-theme="light"] .chroma .mb,
+  :root[data-theme="light"] .chroma .mf,
+  :root[data-theme="light"] .chroma .mh,
+  :root[data-theme="light"] .chroma .mi,
+  :root[data-theme="light"] .chroma .mo,
+  :root[data-theme="light"] .chroma .il { color: #0550ae; }
+  :root[data-theme="light"] .chroma .na,
+  :root[data-theme="light"] .chroma .nc,
+  :root[data-theme="light"] .chroma .nd,
+  :root[data-theme="light"] .chroma .ne,
+  :root[data-theme="light"] .chroma .nf,
+  :root[data-theme="light"] .chroma .nx,
+  :root[data-theme="light"] .chroma .nt { color: #8250df; }
+  :root[data-theme="light"] .chroma .nb,
+  :root[data-theme="light"] .chroma .bp,
+  :root[data-theme="light"] .chroma .fm,
+  :root[data-theme="light"] .chroma .nv,
+  :root[data-theme="light"] .chroma .vc,
+  :root[data-theme="light"] .chroma .vg,
+  :root[data-theme="light"] .chroma .vi { color: #953800; }
+  :root[data-theme="light"] .chroma .o,
+  :root[data-theme="light"] .chroma .p { color: #24292f; }
+  :root[data-theme="light"] .chroma .gd { background-color: #ffebe9; color: #82071e; }
+  :root[data-theme="light"] .chroma .gi { background-color: #dafbe1; color: #116329; }
+
+  :root[data-theme="dark"] code {
+    background-color: rgba(110, 118, 129, 0.4);
+    color: #e6edf3;
+  }
+
+  :root[data-theme="dark"] div.highlight,
+  :root[data-theme="dark"] div.highlight pre,
+  :root[data-theme="dark"] .chroma {
+    background: #0d1117;
+    color: #e6edf3;
+  }
+
+  :root[data-theme="dark"] div.highlight { border-color: #30363d; }
+  :root[data-theme="dark"] .chroma .c,
+  :root[data-theme="dark"] .chroma .c1,
+  :root[data-theme="dark"] .chroma .cm,
+  :root[data-theme="dark"] .chroma .cp,
+  :root[data-theme="dark"] .chroma .cs { color: #8b949e; }
+  :root[data-theme="dark"] .chroma .k,
+  :root[data-theme="dark"] .chroma .kc,
+  :root[data-theme="dark"] .chroma .kd,
+  :root[data-theme="dark"] .chroma .kn,
+  :root[data-theme="dark"] .chroma .kp,
+  :root[data-theme="dark"] .chroma .kr,
+  :root[data-theme="dark"] .chroma .kt,
+  :root[data-theme="dark"] .chroma .ow { color: #ff7b72; }
+  :root[data-theme="dark"] .chroma .s,
+  :root[data-theme="dark"] .chroma .s1,
+  :root[data-theme="dark"] .chroma .s2,
+  :root[data-theme="dark"] .chroma .sa,
+  :root[data-theme="dark"] .chroma .sb,
+  :root[data-theme="dark"] .chroma .sc,
+  :root[data-theme="dark"] .chroma .sd,
+  :root[data-theme="dark"] .chroma .se,
+  :root[data-theme="dark"] .chroma .sh,
+  :root[data-theme="dark"] .chroma .si,
+  :root[data-theme="dark"] .chroma .sx { color: #a5d6ff; }
+  :root[data-theme="dark"] .chroma .m,
+  :root[data-theme="dark"] .chroma .mb,
+  :root[data-theme="dark"] .chroma .mf,
+  :root[data-theme="dark"] .chroma .mh,
+  :root[data-theme="dark"] .chroma .mi,
+  :root[data-theme="dark"] .chroma .mo,
+  :root[data-theme="dark"] .chroma .il { color: #79c0ff; }
+  :root[data-theme="dark"] .chroma .na,
+  :root[data-theme="dark"] .chroma .nc,
+  :root[data-theme="dark"] .chroma .nd,
+  :root[data-theme="dark"] .chroma .ne,
+  :root[data-theme="dark"] .chroma .nf,
+  :root[data-theme="dark"] .chroma .nx,
+  :root[data-theme="dark"] .chroma .nt { color: #d2a8ff; }
+  :root[data-theme="dark"] .chroma .nb,
+  :root[data-theme="dark"] .chroma .bp,
+  :root[data-theme="dark"] .chroma .fm,
+  :root[data-theme="dark"] .chroma .nv,
+  :root[data-theme="dark"] .chroma .vc,
+  :root[data-theme="dark"] .chroma .vg,
+  :root[data-theme="dark"] .chroma .vi { color: #ffa657; }
+  :root[data-theme="dark"] .chroma .o,
+  :root[data-theme="dark"] .chroma .p { color: #e6edf3; }
+  :root[data-theme="dark"] .chroma .gd { background-color: #490202; color: #ffdcd7; }
+  :root[data-theme="dark"] .chroma .gi { background-color: #033a16; color: #aff5b4; }
+
+  :root[data-theme] pre code {
+    background-color: transparent;
+    color: inherit;
   }
 </style>
 

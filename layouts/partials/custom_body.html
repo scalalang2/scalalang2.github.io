@@ -1,0 +1,25 @@
+<script>
+  (() => {
+    const button = document.querySelector(".theme-toggle");
+    if (!button) return;
+
+    const updateButton = (theme) => {
+      const nextTheme = theme === "dark" ? "라이트" : "다크";
+      button.setAttribute("aria-label", `${nextTheme} 모드로 전환`);
+      button.setAttribute("title", `${nextTheme} 모드로 전환`);
+      button.setAttribute("aria-pressed", String(theme === "dark"));
+    };
+
+    updateButton(document.documentElement.dataset.theme);
+    button.addEventListener("click", () => {
+      const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (_) {}
+      updateButton(theme);
+      window.dispatchEvent(new CustomEvent("themechange", { detail: { theme } }));
+    });
+  })();
+</script>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/css/fixed-chunk-shift.css">
+
+<figure class="chunk-shift" aria-labelledby="chunk-shift-caption">
+  <div class="chunk-shift__header">
+    <span>4 bytes / chunk</span>
+  </div>
+
+  <div class="chunk-shift__comparison" role="img" aria-label="앞에 한 바이트를 삽입하면 고정 크기 청크의 경계가 연쇄적으로 밀리는 예시">
+    <div class="chunk-shift__row">
+      <span class="chunk-shift__label">원본</span>
+      <div class="chunk-shift__chunks" aria-hidden="true">
+        <span class="chunk-shift__chunk chunk-shift__chunk--lavender">ABCD</span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--mint">EFGH</span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--peach">IJKL</span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--pink">MNOP</span>
+      </div>
+    </div>
+
+    <div class="chunk-shift__row">
+      <span class="chunk-shift__label">1 byte 삽입</span>
+      <div class="chunk-shift__chunks" aria-hidden="true">
+        <span class="chunk-shift__chunk chunk-shift__chunk--lavender"><strong>X</strong>ABC</span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--mint">DEFG</span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--peach">HIJK</span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--pink">LMNO</span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--blue">P</span>
+      </div>
+    </div>
+  </div>
+</figure>

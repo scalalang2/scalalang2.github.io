@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="/css/fixed-chunk-shift.css">
+
+<figure class="chunk-shift chunk-shift--content-defined" aria-labelledby="content-chunk-caption">
+  <div class="chunk-shift__header">
+    <span>Boundary pattern: <b>ZZ</b></span>
+  </div>
+
+  <div class="chunk-shift__comparison" role="img" aria-label="ZZ 패턴을 경계로 나눈 경우 중간 내용이 바뀌어도 앞뒤 청크는 유지되는 예시">
+    <div class="chunk-shift__row">
+      <span class="chunk-shift__label">원본</span>
+      <div class="chunk-shift__chunks chunk-shift__chunks--content" aria-hidden="true">
+        <span class="chunk-shift__chunk chunk-shift__chunk--lavender">AB<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--mint">CD<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--peach">EF<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--pink">GH<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--blue">IJ<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--lavender">KL<span class="chunk-shift__boundary">ZZ</span></span>
+      </div>
+    </div>
+
+    <div class="chunk-shift__row">
+      <span class="chunk-shift__label">중간 수정</span>
+      <div class="chunk-shift__chunks chunk-shift__chunks--content" aria-hidden="true">
+        <span class="chunk-shift__chunk chunk-shift__chunk--lavender">AB<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--mint">CD<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--peach">E<strong>X</strong>F<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--pink">GH<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--blue">IJ<span class="chunk-shift__boundary">ZZ</span></span>
+        <span class="chunk-shift__chunk chunk-shift__chunk--lavender">KL<span class="chunk-shift__boundary">ZZ</span></span>
+      </div>
+    </div>
+  </div>
+
+  <figcaption id="content-chunk-caption">
+    경계는 그대로 유지되고, 수정이 발생한 청크만 달라집니다.
+  </figcaption>
+</figure>

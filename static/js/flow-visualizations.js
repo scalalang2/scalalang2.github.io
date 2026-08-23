@@ -6,6 +6,10 @@
   const clamp = (v, lo = 0, hi = 1) => Math.max(lo, Math.min(hi, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const ease = t => t * t * (3 - 2 * t);
+  const isDark = () => {
+    const theme = document.documentElement.dataset.theme;
+    return theme ? theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  };
 
   class FlowViz {
     constructor(root) {
@@ -81,7 +85,7 @@
 
     clear() {
       const c = this.ctx;
-      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = isDark();
       c.clearRect(0, 0, this.w, this.h);
       c.fillStyle = dark ? '#181b20' : '#f8fafc';
       c.fillRect(0, 0, this.w, this.h);
@@ -112,7 +116,7 @@
 
     drawTrajectory() {
       const c = this.ctx, w = this.w, h = this.h;
-      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = isDark();
       const accent = dark ? '#60a5fa' : '#2563eb';
       const secondary = dark ? '#94a3b8' : '#64748b';
       const px = p => ({ x: p.x * w, y: p.y * h });
@@ -166,7 +170,7 @@
 
     drawField() {
       const c = this.ctx, w = this.w, h = this.h;
-      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = isDark();
       const cols = w < 520 ? 10 : 16, rows = w < 520 ? 7 : 10;
       for (let iy = 0; iy < rows; iy++) for (let ix = 0; ix < cols; ix++) {
         const nx = ix / (cols - 1), ny = iy / (rows - 1), v = this.fieldAt(nx * 2 - 1, ny * 2 - 1, this.t);
@@ -187,7 +191,7 @@
 
     drawDivergence() {
       const c = this.ctx, w = this.w, h = this.h;
-      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = isDark();
       const ink = dark ? '#e2e8f0' : '#334155';
       const muted = dark ? '#94a3b8' : '#64748b';
       const accent = dark ? '#60a5fa' : '#2563eb';
@@ -271,7 +275,7 @@
 
     drawDiffusionVsFlow() {
       const c = this.ctx, w = this.w, h = this.h;
-      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = isDark();
       const ink = dark ? '#e2e8f0' : '#334155', muted = dark ? '#94a3b8' : '#64748b', accent = dark ? '#60a5fa' : '#2563eb';
       const border = dark ? 'rgba(148,163,184,.22)' : 'rgba(100,116,139,.20)';
       const gap = Math.max(10, w * .025), margin = Math.max(10, w * .025), top = 42, panelH = h - top - 16;
@@ -307,6 +311,9 @@
 
   const init = () => document.querySelectorAll('[data-flow-viz]').forEach(root => {
     if (!root.__flowViz) root.__flowViz = new FlowViz(root);
+  });
+  window.addEventListener('themechange', () => {
+    document.querySelectorAll('[data-flow-viz]').forEach(root => root.__flowViz?.draw());
   });
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
 })();
