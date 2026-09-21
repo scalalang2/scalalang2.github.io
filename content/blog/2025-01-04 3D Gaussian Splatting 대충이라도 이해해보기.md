@@ -1,5 +1,5 @@
 ---
-title: "3D Gaussian Splatting 대충이라도 이해해보기"
+title: "야매로 이해하는 3D Gaussian Splatting"
 date: "2025-01-04T10:07:55.897Z"
 slug: "3d-gaussian-splatting-대충-이해하기"
 description: "2023년 8월, 컴퓨터 그래픽스 최대 학회인 SIGGRAPH에서 발표된 하나의 논문이 학계에서 굉장히 많은 관심을 받고 있습니다."
