@@ -1,7 +1,7 @@
 ---
 title: "CycleGAN — Unpaired 데이터를 학습하고 이미지 변환하기"
 date: "2020-09-30T08:12:09.201Z"
-slug: "cyclegan-unpaired-데이터를-학습하고-이미지-변환하기-6fca2f2cddd5"
+slug: "cyclegan-unpaired-image-translation"
 description: "이번 포스팅에서는 이미 너무나도 유명한 CycleGAN 논문을 리뷰해보고자 한다. 본 글의 구성은 첫 째로 CycleGAN을 집필한 저자에 대해 소개하는 것으로 시작한다. 논문 저자는 CycleGAN 이후로도 2020년 현재까지 이미지 생성 모델…"
 tags: []
 ---

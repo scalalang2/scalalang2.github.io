@@ -1,7 +1,7 @@
 ---
 title: "Proof-of-History | 솔라나의 역사 증명"
 date: "2021-12-15T02:04:04.129Z"
-slug: "proof-of-history-솔라나의-역사-증명-ae5886f90d48"
+slug: "solana-proof-of-history"
 description: "중대장은 솔라나에 실망했다."
 tags: []
 ---

@@ -1,7 +1,7 @@
 ---
 title: "Cross-rollup NFT wrapper"
 date: "2021-10-23T01:17:05.381Z"
-slug: "cross-rollup-nft-wrapper-nft거래-있잖아-메인넷말고-다른데서-하면-안될까-4fd6d392d072"
+slug: "cross-rollup-nft-wrapper"
 description: "NFT거래 있잖아. 메인넷말고 다른데서 하면 안될까?"
 tags: []
 ---

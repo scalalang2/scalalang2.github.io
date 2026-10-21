@@ -1,7 +1,7 @@
 ---
 title: "Citus | Postgres 분산 데이터베이스 A-Z 소개"
 date: "2022-12-18T08:20:15.274Z"
-slug: "citus-postgres-분산-데이터베이스-a-z-소개-8f2fe3dd3428"
+slug: "citus-distributed-postgresql"
 description: "오랜만에 논문 한편을 읽었다."
 tags: []
 ---

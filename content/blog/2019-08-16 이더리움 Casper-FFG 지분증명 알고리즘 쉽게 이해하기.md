@@ -1,7 +1,7 @@
 ---
 title: "이더리움 Casper-FFG 지분증명 알고리즘 쉽게 이해하기"
 date: "2019-08-16T02:18:38.137Z"
-slug: "이더리움-확장성-솔루션-casper-ffg-지분증명-알고리즘-쉽게-이해하기-c9103e0aeb6e"
+slug: "casper-ffg-proof-of-stake-explained"
 description: "비탈릭 부테린의 2017년 논문인 “Casper Friendly Finality Gadget”에 대해 설명합니다."
 tags: []
 ---

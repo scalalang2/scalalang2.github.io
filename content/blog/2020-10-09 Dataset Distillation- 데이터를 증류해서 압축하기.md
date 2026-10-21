@@ -1,7 +1,7 @@
 ---
 title: "Dataset Distillation- 데이터를 증류해서 압축하기"
 date: "2020-10-09T06:07:08.592Z"
-slug: "dataset-distillation-데이터를-증류해서-압축하기-db76599c8d02"
+slug: "dataset-distillation"
 description: "빅데이터(Big Data)라는 용어는 사회적인 유행어처럼 쓰이고 있다. 몇몇 이들은 많은 데이터를 쌓이 두기만 하면 이를 활용해 새로운 비즈니스를 창출 하고 부를 이룰 수 있다고 믿고 있다. 하지만, 단순히 데이터가 많은 것보다 중요한 건 좋은…"
 tags: []
 ---

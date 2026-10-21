@@ -1,7 +1,7 @@
 ---
 title: "Azure Cosmos DB의 DiskANN 고성능 벡터 인덱스"
 date: "2025-09-14T02:03:17.630Z"
-slug: "azure-cosmos-db의-고성능-벡터-인덱스-52f874e4bd7b"
+slug: "azure-cosmos-db-diskann-vector-index"
 description: "OpenAI는 대조학습을 활용한 CLIP 모델에서 멀티-모달 데이터를 하나의 공유된 임베딩 공간으로 투영할 수 있음을 보여주었고, 문장 내에서 단어간 관계성을 계산하는 어텐션 매커니즘을 활용한 트랜스포머 아키텍처를 활용한 언어 모델의 발전은 텍스트를…"
 tags: []
 ---

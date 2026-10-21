@@ -1,7 +1,7 @@
 ---
 title: "Write Once Deploy Anywhere"
 date: "2022-01-22T02:31:39.412Z"
-slug: "write-once-deploy-anywhere-ad776f7e7b6-2022-01-22_write-once-deploy-anywhere-ad776f7e7b6"
+slug: "write-once-deploy-anywhere"
 description: "Cosmos 스마트 컨트랙트 개발을 위한 길라잡이"
 tags: []
 ---

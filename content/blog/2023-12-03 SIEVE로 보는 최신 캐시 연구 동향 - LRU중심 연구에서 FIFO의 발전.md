@@ -1,7 +1,7 @@
 ---
 title: "SIEVE로 보는 최신 캐시 연구 동향 | LRU중심 연구에서 FIFO의 발전"
 date: "2023-12-03T07:02:04.099Z"
-slug: "어떤-소가-일을-더-잘합니까-fifo가-lru보다-낫습니다요-1a49b9060ce4"
+slug: "sieve-and-fifo-cache-eviction"
 description: "S3FIFO / SIEVE 소프트웨어 캐시 분야 최신 논문 소개"
 tags: []
 ---

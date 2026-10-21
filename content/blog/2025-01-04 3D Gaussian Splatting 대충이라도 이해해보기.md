@@ -1,7 +1,7 @@
 ---
 title: "야매로 이해하는 3D Gaussian Splatting"
 date: "2025-01-04T10:07:55.897Z"
-slug: "3d-gaussian-splatting-대충-이해하기"
+slug: "3d-gaussian-splatting-explained"
 description: "2023년 8월, 컴퓨터 그래픽스 최대 학회인 SIGGRAPH에서 발표된 하나의 논문이 학계에서 굉장히 많은 관심을 받고 있습니다."
 tags: []
 ---
