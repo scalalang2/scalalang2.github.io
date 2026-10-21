@@ -1,7 +1,7 @@
 ---
 title: "Paxos보다 쉬운 Raft Consensus"
 date: "2022-03-13T07:30:44.706Z"
-slug: "raft-consensus-이해-가능한-합의-알고리즘을-위한-여정-f7ecb9f450ab"
+slug: "raft-consensus-explained"
 description: "이해 가능한 합의 알고리즘을 위한 여정"
 tags: []
 ---

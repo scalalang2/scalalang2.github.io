@@ -1,7 +1,7 @@
 ---
 title: "Dynamo DB냐 RDBMS냐 그것이 문제로다"
 date: "2025-01-29T08:11:27.142Z"
-slug: "dynamo-db냐-rdbms냐-그것이-문제로다-45fdf48f6a9d"
+slug: "dynamodb-vs-relational-databases"
 description: "회사에 새롭게 입사한 신입 직원이 이런 질문을 했습니다. “왜 여기는 RDBMS를 안쓰고 DynamoDB를 쓰나요?” 저는 RDBMS는 서버 운영 중에 샤드 개수를 늘리고 축소하는 것이 쉽지 않고 DynamoDB는 수평 확장이 쉽다고 답변했습니다…"
 tags: []
 ---

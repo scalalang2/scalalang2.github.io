@@ -1,7 +1,7 @@
 ---
 title: "연합 학습(Federated Learning), 그리고 챌린지"
 date: "2020-11-08T07:21:12.122Z"
-slug: "연합-학습-federated-learning-그리고-챌린지-b5c481bd94b7"
+slug: "federated-learning-and-its-challenges"
 description: "연합 학습(FL: Federated Learning)은 다수의 로컬 클라이언트와 하나의 중앙 서버가 협력하여 데이터가 탈중앙화된 상황에서 글로벌 모델을 학습하는 기술이다. 여기서 로컬 클라이언트는 사물 인터넷 기기, 스마트 폰 등을 말한다. 이…"
 tags: []
 ---

@@ -16,6 +16,8 @@ for (const file of files) {
   const slug = /^slug: "(.+)"$/m.exec(content)?.[1];
   if (!slug) {
     issues.push(`${file}: missing slug`);
+  } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    issues.push(`${file}: slug must use lowercase English letters, digits, and single hyphens`);
   } else if (slugs.has(slug)) {
     issues.push(`${file}: duplicate slug with ${slugs.get(slug)}`);
   } else {

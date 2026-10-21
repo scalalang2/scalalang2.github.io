@@ -1,7 +1,7 @@
 ---
 title: "You Only Look Once — 다.. 단지 한 번만 보았을 뿐이라구!"
 date: "2020-05-01T22:00:26.391Z"
-slug: "you-only-look-once-다-단지-한-번만-보았을-뿐이라구-bddc8e6238e2"
+slug: "yolo-real-time-object-detection"
 description: "이번 포스팅에서는 객체 탐지(Object Detection)분야에서 많이 알려진 논문인 “You Only Look Once: Unified, Real-Time Object Detection (2016)”을 다룬다[1]. 줄여서 흔히 YOLO라고…"
 tags: []
 ---

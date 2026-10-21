@@ -1,7 +1,7 @@
 ---
 title: "CacheBlend | RAG기반 LLM 추론 속도 개선하기"
 date: "2025-04-19T23:43:17.331Z"
-slug: "cacheblend-rag기반-llm-추론-속도-개선하기-bdf8fa7c8e40"
+slug: "cacheblend-faster-rag-inference"
 description: "CacheBlend[1]는 EuroSys’2025에서 최우수 논문(Best Paper)로 선정된 두 개의 논문 중 하나입니다. CacheBlend은 기존 접근법과 비교하여 RAG, QA 태스크에서 TTFT(time-to-first-token)를…"
 tags: []
 ---

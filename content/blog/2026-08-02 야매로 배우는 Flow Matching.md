@@ -1,6 +1,7 @@
 ---
 title: "야매로 배우는 Flow Matching"
 date: "2026-08-02"
+slug: "flow-matching-explained"
 description: "Flow Matching의 핵심 아이디어와 확산 모델과의 차이를 야매로 정리해봅니다."
 ---
 
@@ -164,7 +165,7 @@ generated_samples, trajectories = generate(initial_samples)
 그래서 이 무한한 공간 어딘가에 고양이, 강아지, 곰 등의 이미지 데이터가 숨어 있으며, 이 이미지들은 실제로 공간 전체에 흩어져 있는 게 아니라 강아지에 가까운 사진은 서로 비슷한 영역에 뭉쳐있고, 고양이에 가까운 사진은 서로 비슷한 영역에 모여있다고 봅시다. 바로 이런 영역에 최적화된 데이터 분포를 $P_{data}$라고 부르고 생성모델은 이 영역을 찾는 일입니다.
 
 ## Diffusion Model
-Diffusion Model은 예전에 제가 작성한 [이전 글](/p/AI와-게임-개발-3D-생성-모델-연구-맛보기/)에서 다룬 적이 있습니다. 여기서는 Diffusion Model의 간단한 아이디어만 다루겠습니다.
+Diffusion Model은 예전에 제가 작성한 [이전 글](/p/ai-game-development-and-3d-generation/)에서 다룬 적이 있습니다. 여기서는 Diffusion Model의 간단한 아이디어만 다루겠습니다.
 
 **Diffusion Model**은 $P_{data}$의 표본이자 현실 세계에서 관측한 데이터에 노이즈를 점진적으로 추가해서 우리가 <u>다루기 쉬운 분포인</u> 가우시안 노이즈로 만듭니다. 
 

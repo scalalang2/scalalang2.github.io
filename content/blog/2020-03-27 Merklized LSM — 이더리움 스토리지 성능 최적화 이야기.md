@@ -1,7 +1,7 @@
 ---
 title: "Merklized LSM — 이더리움 스토리지 성능 최적화 이야기"
 date: "2020-03-27T13:06:39.026Z"
-slug: "merklized-lsm-이더리움-스토리지-성능-최적화-이야기-5c77acbbe2b0"
+slug: "merklized-lsm-ethereum-storage-optimization"
 description: "개인적으로 이더리움을 표현할 때 블록체인 대신 새로운 용어를 만들어서 불러야 한다고 생각한다. 블록체인이라는 용어는 지나치게 데이터베이스의 성격을 강조하는 용어이기 때문에 많은 연구자들과 사용자들이 블록체인을 데이터 저장소 용도로만 생각하는 경우가…"
 tags: []
 ---
